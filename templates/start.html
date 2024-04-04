@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/start.css' %}">
+    <title>Start page</title>
+</head>
+<body>
+    <section class="header">
+        <div class="text-box">
+            <h1>World's Biggest <span style="color: #2ecc71;">Influencers</span> Hub</h1>
+            <p>
+                Connect with top influencers and brands for impactful collaborations.
+            </p>
+            <a href="{% url "login_view" %}" class="home-btn">GET STARTED</a>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
+    <title>Sign Up Form</title>
+</head>
+<body>
+
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message.message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    
+        <h1 class="form-title">Sign up</h1>
+        <form method="post" action="/signup/" >
+            {% csrf_token %}
+            <div class="main-user-info">
+                <div class="user-input-box">
+                    <label for="username">Full Name</label>
+                    <input type="text" id="fullName" name="username" placeholder="Enter Full Name" required>
+                </div>
+                <div class="user-input-box">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter Email" required>
+                </div>
+                <div class="user-input-box">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" required>
+                </div>
+                <div class="user-input-box">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password" required>
+                </div>
+                <div class="user-input-box">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                </div>
+            </div>
+            <div class="gender-details-box">
+                <span class="gender-title">Account Type</span>
+                <div class="gender-category">
+                    <input type="radio" name="type" id="influencer" value="influencer" required>
+                    <label for="influencer">Influencer</label>
+
+                    <input type="radio" name="type" id="sponsor" value="sponsor" required>
+                    <label for="sponsor">Sponsor</label>
+
+                    <input type="radio" name="type" id="admin" value="admin" required>
+                    <label for="admin">Admin</label>
+                </div>
+            </div>
+            <div class="form-submit-btn">
+                <input type="submit" value="Sign up">
+            </div>
+            <div class="signup-link">Already have an account? <a href="{% url "login_view" %}">Login here</a></div>
+        </form>
+    </div>
+</body>
+</html>
