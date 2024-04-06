@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from .models import UsersTBL, InfluencersTBL, SponsorsTBL
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from .models import UsersTBL
+
+
+
 #####################-START PAGE-####################### 
 def start(request):
     return render(request, 'start.html')
@@ -76,7 +77,7 @@ def signup(request):
         return render(request, 'signup_view.html')
     
 #####################-HOME PAGE-#######################
-@login_required(login_url='login_view') 
+@login_required(login_url='login_view')
 def home(request):
     context = {'username': request.user.username}
     return render(request, 'home.html', context)
@@ -88,4 +89,8 @@ def adminpage(request):
 
 #####################-UPDATE PROFILE-#######################
 def update_profile(request):
+
     return render(request, 'update_profile.html')
+#####################-DELETE PROFILE-#######################
+def delete_account(request):
+    return render(request, 'delete_account.html')

@@ -1,86 +1,72 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: white;
-    color: black;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
-
-.container {
-    width: 80%;
+body {
+    font-family: Arial, sans-serif;
+}
+header {
+    background-color: #1e90ff; /* Blue color */
+    color: #fff;
+    padding: 10px 0;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+.nav-links {
+    list-style-type: none;
+    display: flex;
+}
+.nav-links li {
+    margin-right: 20px;
+}
+.nav-links li a {
+    text-decoration: none;
+    color: #fff;
+}
+.main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+.container h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+.container p {
+    font-size: 18px;
+    color: #555;
 }
 
-h1 {
-    color: blue;
+.nav-links li a:hover {
+    color: #ffdead; 
+    transition: color 0.3s ease;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: green;
-}
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="url"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid blue;
-    border-radius: 5px;
-}
-
-button[type="submit"] {
-    background-color: green;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button[type="submit"]:hover {
-    background-color: darkgreen;
-}
-
-button[type="submit"]:focus {
-    outline: none;
-}
-
-button[type="submit"]:active {
-    background-color: limegreen;
-}
-
-button[type="submit"],
-button[type="button"] {
-    margin-right: 10px;
-}
-
-button[type="button"] {
-    background-color: blue;
-}
-
-button[type="button"]:hover {
-    background-color: darkblue;
-}
-
-button[type="button"]:active {
-    background-color: royalblue;
-}
-
-button[type="button"],
-button[type="submit"] {
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button[type="button"]:focus,
-button[type="submit"]:focus {
-    outline: none;
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-links li {
+        margin: 10px 0;
+    }
+    .logo {
+        margin-bottom: 20px;
+    }
 }

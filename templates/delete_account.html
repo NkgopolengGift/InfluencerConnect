@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
-    <script src="{% static 'scripts/main.js' %}" defer></script>
+    <!--<link rel="stylesheet" href="{% static 'styles/home.css' %}">-->
+    <!--<script src="{% static 'scripts/main.js' %}" defer></script>-->
     <title>home page</title>
 </head>
 <body>
@@ -14,7 +14,7 @@
             <div class="logo">InfluencerConnect</div>
             <ul class="nav-links">
                 <li><a href="#">Home</a></li>
-                <li><a href="{% url 'update_profile'%}">Profile</a></li>
+                <li><a href="{% url 'update_profile' %}">Profile</a></li>
                 <li><a href="#">Messages</a></li>
                 <li><a href="#">Campaigns</a></li>
                 <li><a href="#">Analytics</a></li>
@@ -24,12 +24,9 @@
     </header>
 
     <main>
-       
         <div class="container">
-            <h1>Welcome to InfluencerConnect Dashboard</h1>
-            <p>Explore and manage your influencer marketing activities here.</p>
-        </div>
-       
+          
+        </div>   
     </main>
 </body>
 </html>

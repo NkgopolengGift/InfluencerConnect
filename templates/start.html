@@ -9,7 +9,16 @@
 </head>
 <body>
     <section class="header">
+        
+
         <div class="text-box">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li>{{ message.message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
             <h1>World's Biggest <span style="color: #2ecc71;">Influencers</span> Hub</h1>
             <p>
                 Connect with top influencers and brands for impactful collaborations.

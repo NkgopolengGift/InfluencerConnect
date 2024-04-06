@@ -1,1 +1,33 @@
-<h1> Welcome</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/update_profile.css' %}">
+    <!--<script src="{% static 'scripts/main.js' %}" defer></script>-->
+    <title>home page</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InfluencerConnect</div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="#">Messages</a></li>
+                <li><a href="#">Campaigns</a></li>
+                <li><a href="#">Analytics</a></li>
+                <li><a href="{% url 'logout_view' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>       
+        <div class="container">
+            {{form.as_p}}
+
+        </div>
+       
+    </main>
+</body>
+</html>
