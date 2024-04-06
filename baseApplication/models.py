@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
-#############################################################S
+#################-USERSTBL-###################
 class UsersTBL(models.Model):
     username = models.CharField(max_length=70)
     email = models.EmailField(max_length=70)
@@ -17,7 +16,7 @@ class UsersTBL(models.Model):
         if not self.last_login:
             self.last_login = timezone.now()
         super(UsersTBL, self).save(*args, **kwargs)
-#################################################################################
+#################-INFLUENCERSTBL-###################
 class InfluencersTBL(models.Model):
     content_category = models.CharField(max_length=50)
     average_views = models.IntegerField()
@@ -30,38 +29,38 @@ class InfluencersTBL(models.Model):
     instagram_url = models.URLField(unique=True)
     tiktok_url = models.URLField(unique=True)
     twitter_url = models.URLField(unique=True)
-
+#################-PONSORSTBL-###################
 class SponsorsTBL(models.Model):
     company_name = models.CharField(max_length=50)
     content_category = models.CharField(max_length=50)
     company_website = models.URLField(max_length=50)
-
+#################-MESSAGESTBL-###################
 class MessagingTBL(models.Model):
     sender = models.ForeignKey(UsersTBL, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(UsersTBL, on_delete=models.CASCADE, related_name='received_messages')
     message_content = models.TextField()
     message_time = models.DateTimeField()
-
+#################-ADMINTBL-###################
 class AdminsTBL(models.Model):
     admin = models.ForeignKey(UsersTBL, on_delete=models.CASCADE)
     action_type = models.CharField(max_length=50)
-
+#################-YOUTUBETBL-###################
 class YouTubeTBL(models.Model):
     influencer = models.OneToOneField(InfluencersTBL, on_delete=models.CASCADE)
     account_url = models.URLField(unique=True)
-
+#################-FACEBOOKTBL-###################
 class FacebookTBL(models.Model):
     influencer = models.OneToOneField(InfluencersTBL, on_delete=models.CASCADE)
     account_url = models.URLField(unique=True)
-
+#################-INSTAGRAMTBL-###################
 class InstagramTBL(models.Model):
     influencer = models.OneToOneField(InfluencersTBL, on_delete=models.CASCADE)
     account_url = models.URLField(unique=True)
-
+#################-TIKTOKTBL-###################
 class TiktokTBL(models.Model):
     influencer = models.OneToOneField(InfluencersTBL, on_delete=models.CASCADE)
     account_url = models.URLField(unique=True)
-
+#################-TWITTERTBL-###################
 class TwitterTBL(models.Model):
     influencer = models.OneToOneField(InfluencersTBL, on_delete=models.CASCADE)
     account_url = models.URLField(unique=True)

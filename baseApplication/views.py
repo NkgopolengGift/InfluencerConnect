@@ -1,19 +1,18 @@
-from django.shortcuts import render, redirect
-#from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from .models import UsersTBL
-
-##########################################################################################
-#start page 
+from .models import UsersTBL, InfluencersTBL, SponsorsTBL
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+#####################-START PAGE-####################### 
 def start(request):
     return render(request, 'start.html')
 
-##########################################################################################
-#LogIn Page
+#####################-LOGIN-#######################
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -37,14 +36,14 @@ def login_view(request):
             return redirect('login_view')
     else:
         return render(request, 'login_view.html')
-##########################################################################################
-#LogOut
+
+#####################-LOGOUT-#######################
 def logout_view(request):
     logout(request)
+    messages.success(request,'Logged out succesfully')
     return redirect('start')
 
-##########################################################################################
-#Create account page
+#####################-SIGN UP-#######################
 def signup(request):
     if request.method == 'POST':
        
@@ -76,16 +75,17 @@ def signup(request):
     else:
         return render(request, 'signup_view.html')
     
-##########################################################################################
-#Home Page
-#@login_required(login_url ='login_view')
+#####################-HOME PAGE-#######################
+@login_required(login_url='login_view') 
 def home(request):
-    return render(request, 'home.html')
+    context = {'username': request.user.username}
+    return render(request, 'home.html', context)
 
-##########################################################################################
-#admin page
-#@login_required(login_url ='login_view')
+#####################-ADMIN PAGE-#######################
 def adminpage(request):
-    return render(request, 'adminpage.html')
+    context = {'username': request.user.username}
+    return render(request, 'adminpage.html', context)
 
-
+#####################-UPDATE PROFILE-#######################
+def update_profile(request):
+    return render(request, 'update_profile.html')
