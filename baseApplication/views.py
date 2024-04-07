@@ -3,11 +3,9 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import UsersTBL
-
-
 
 #####################-START PAGE-####################### 
 def start(request):
@@ -19,22 +17,19 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        try:
-            user = UsersTBL.objects.get(username=username)
-            if check_password(password, user.password):
-                # Manually set the backend attribute
-                user.backend = 'django.contrib.auth.backends.ModelBackend'
-                login(request, user)
-                if user.account_type == 'admin':
-                    return redirect('adminpage')
-                else:
-                    return redirect('home')
+        if username and password:
+            user = authenticate(username=username, password=password)  # Use Django's authenticate
+
+            if user:
+                login(request, user)  # Use Django's login
+                messages.success(request, 'You have logged in successfully.')
+                return redirect('home')
             else:
-                messages.error(request, "Invalid  password.")
-                return redirect('login_view')
-        except UsersTBL.DoesNotExist:
-            messages.error(request, "User does not exist.")
-            return redirect('login_view')
+                messages.error(request, 'Invalid credentials, try again.')
+                return render(request, 'login_view.html')
+        else:
+            messages.error(request, 'Please fill all fields')
+            return render(request, 'login_view.html')
     else:
         return render(request, 'login_view.html')
 
@@ -94,3 +89,5 @@ def update_profile(request):
 #####################-DELETE PROFILE-#######################
 def delete_account(request):
     return render(request, 'delete_account.html')
+
+
