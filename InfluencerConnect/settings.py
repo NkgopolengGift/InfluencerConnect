@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     'baseApplication.apps.BaseapplicationConfig',
 ]
+#I added this code to solve the login function
+AUTH_USER_MODEL = 'baseApplication.UsersTBL'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

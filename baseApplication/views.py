@@ -8,22 +8,26 @@ from django.contrib import messages
 from .models import UsersTBL
 
 #####################-START PAGE-####################### 
-def start(request):
-    return render(request, 'start.html')
+def index(request):
+    return render(request, 'index.html')
 
 #####################-LOGIN-#######################
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password = request.POST.get('password')  
         
         if username and password:
-            user = authenticate(username=username, password=password)  # Use Django's authenticate
-
-            if user:
-                login(request, user)  # Use Django's login
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
                 messages.success(request, 'You have logged in successfully.')
-                return redirect('home')
+                
+                if user.account_type == 'admin':
+                    return redirect('adminpage')
+                else:
+                    return redirect('home')
             else:
                 messages.error(request, 'Invalid credentials, try again.')
                 return render(request, 'login_view.html')
@@ -32,12 +36,11 @@ def login_view(request):
             return render(request, 'login_view.html')
     else:
         return render(request, 'login_view.html')
-
 #####################-LOGOUT-#######################
 def logout_view(request):
     logout(request)
     messages.success(request,'Logged out succesfully')
-    return redirect('start')
+    return redirect('index')
 
 #####################-SIGN UP-#######################
 def signup(request):

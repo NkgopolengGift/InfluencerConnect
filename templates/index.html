@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <title>InfluencerConnect page</title>
+</head>
+<body>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo"> 
+                <h2>InfluencerConnect</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Messages</a></li> 
+            </ul>
+             <a href="{% url 'signup' %}" class="signup-btn">Sign Up</a>
+        </nav>
+    </div> 
+
+     <!--body-->
+     <div class="thebody">
+        <h2>World's Biggest Influencers Hub</h2>
+
+        <h3>Log In</h3>
+        <form method="post" action="/login_view/">
+            {% csrf_token %}
+            <div class="row">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="row">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="row button">
+                <div class="pass"><a href="#">Forgot password?</a></div>
+                <input type="submit" value="Login">
+            </div>
+        </form>
+     </div>
+    </body>
+</body>
+</html>
+
+</body>
+</html>
