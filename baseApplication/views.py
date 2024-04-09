@@ -86,11 +86,38 @@ def adminpage(request):
     return render(request, 'adminpage.html', context)
 
 #####################-UPDATE PROFILE-#######################
-def update_profile(request):
+def profile(request):
+    if request.method == 'POST':
+    
+        user = request.user
+       
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        
+        
+        user.username = username
+        user.email = email
+        user.phone_number = phone_number
+        
+        user.save()
 
-    return render(request, 'update_profile.html')
+        messages.success(request, 'Your profile has been updated!')
+        return redirect('home')
+    else:
+        return render(request, 'profile.html')
 #####################-DELETE PROFILE-#######################
 def delete_account(request):
-    return render(request, 'delete_account.html')
+    if request.method == 'POST':
+        # Retrieve the current user based on the session
+        user = request.user
+        # Perform the deletion of the user and any related data
+        user.delete()
+        messages.success(request, 'Your account has been successfully deleted.')
+        # Redirect to the home page or login page after deletion
+        return redirect('home')
+    else:
+        # If not a POST request, render the delete confirmation page
+        return render(request, 'delete_account.html')
 
 

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="{% static 'css/adminpage.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/profile.css' %}">
+    <title>home page</title>
 </head>
 <body>
     <div class="container">
@@ -16,7 +16,7 @@
             <ul class="menu">
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'profile' %}">Profile</a></li>
-               
+                <li><a href="#">Messages</a></li> 
             </ul>
             
              <a href="{% url 'logout_view' %}" class="signup-btn">Log Out</a>
