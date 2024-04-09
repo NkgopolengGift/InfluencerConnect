@@ -9,27 +9,24 @@
     <title>home page</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">InfluencerConnect</div>
-            <ul class="nav-links">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo"> 
+                <h2>InfluencerConnect</h2>
+            </div>
+            <ul class="menu">
                 <li><a href="#">Home</a></li>
-                <li><a href="{% url 'update_profile'%}">Profile</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="#">Campaigns</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Messages</a></li> 
             </ul>
+             <a href="{% url 'logout_view' %}" class="signup-btn">Log Out</a>
         </nav>
-    </header>
+    </div> 
+    <div class="thebody">
+        <h1>Welcome to InfluencerConnect Dashboard</h1>
+        <p>Explore and manage your influencer marketing activities here.</p>
+    </div>
+</div>
 
-    <main>
-       
-        <div class="container">
-            <h1>Welcome to InfluencerConnect Dashboard</h1>
-            <p>Explore and manage your influencer marketing activities here.</p>
-        </div>
-       
-    </main>
 </body>
 </html>
