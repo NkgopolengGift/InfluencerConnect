@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import UsersTBL
@@ -69,23 +67,25 @@ def signup(request):
         
         new_user.save()
         messages.success(request, "Your account has been successfully created. LogIn")
-        return redirect('login_view')
+        return redirect('index')
 
     else:
         return render(request, 'signup_view.html')
     
 #####################-HOME PAGE-#######################
-@login_required(login_url='login_view')
+@login_required(login_url='index')
 def home(request):
     context = {'username': request.user.username}
     return render(request, 'home.html', context)
 
 #####################-ADMIN PAGE-#######################
+@login_required(login_url='index')
 def adminpage(request):
     context = {'username': request.user.username}
     return render(request, 'adminpage.html', context)
 
 #####################-UPDATE PROFILE-#######################
+@login_required(login_url='index')
 def profile(request):
     if request.method == 'POST':
     
