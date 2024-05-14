@@ -9,6 +9,7 @@ from .models import UserTBL
 def index(request):
     return render(request, 'index.html')
 
+
 #####################-LOGIN-#######################
 def login_view(request):
     if request.method == 'POST':
@@ -74,6 +75,10 @@ def signup(request):
 
     else:
         return render(request, 'signup_view.html')
+    
+#####################-SPONSER-####################### 
+def sponser(request):
+    return render(request, 'sponser.html')
     
 #####################-HOME PAGE-#######################
 @login_required(login_url='index')

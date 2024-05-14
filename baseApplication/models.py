@@ -60,6 +60,38 @@ class UserTBL(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
-#################-INFLUENCERSTBL-###################
+#################-INFLUENCERTBL-###################
 
-#################-SPONSORSTBL-###################
+class Influencer(models.Model):
+    user = models.OneToOneField(UserTBL, on_delete=models.CASCADE, primary_key=True)
+    username = models.CharField(max_length=100, unique=True)
+    content_category = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
+
+#################-SPONSORTBL-###################
+
+class Sponsor(models.Model):
+    user = models.OneToOneField(UserTBL, on_delete=models.CASCADE, primary_key=True)
+    content_category = models.CharField(max_length=100, null=True)
+    website = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.username
+
+#################-PLATFORMTBL-###################
+
+class Platform(models.Model):
+    platform_id = models.AutoField(primary_key=True)
+    username = models.ForeignKey(Influencer, on_delete=models.CASCADE)
+    platform_name = models.CharField(max_length=100)
+    platform_url = models.CharField(max_length=200, unique=True)
+    average_views = models.IntegerField()
+    average_likes = models.IntegerField()
+    average_engagement = models.IntegerField()
+    subscribers_count = models.IntegerField()
+    last_post_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.platform_name

@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
+    <title>sponser page</title>
+</head>
+<body>
+
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message.message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    
+        <h1 class="form-title">Sponser Details</h1>
+        <form method="post" action="/sponser/" >
+            {% csrf_token %}
+            <div class="main-user-info">
+                <div class="user-input-box">
+                    <label for="username">Website</label>
+                    <input type="text" id="website" name="website" placeholder="Enter your website url " required>
+                </div>
+                <div class="user-input-box">
+                    <label for="username">Content category</label>
+                    <label >Category</label>
+                    <select name="content_category" id="content_category" required>
+                        <option value="Tech">Tech</option>
+                        <option value="Fashion">Fashion</option>
+                      </select>
+                </div>
+            </div>
+            <div class="form-submit-btn">
+                <input type="submit" value="submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
