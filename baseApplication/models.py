@@ -1,10 +1,9 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 #################-USERSTBL-###################
 
-class UsersTBLManager(BaseUserManager):
+class UserTBLManager(BaseUserManager):
     def create_user(self, username, email, password=None):
         if not username:
             raise ValueError('The Username field must be set')
@@ -29,13 +28,13 @@ class UsersTBLManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class UsersTBL(AbstractBaseUser):
+class UserTBL(AbstractBaseUser):
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
     username = models.CharField(max_length=70, unique=True)
-    email = models.EmailField(max_length=70, unique=True)
+    email = models.EmailField(max_length=70)
     phone_number = models.CharField(max_length=30)
     account_type = models.CharField(max_length=50)
-    profile_picture = models.BinaryField(null=True, blank=True)
-    bio_description = models.TextField()
     last_login = models.DateTimeField(null=True, blank=True)
     
     # New field added here
@@ -43,7 +42,7 @@ class UsersTBL(AbstractBaseUser):
 
     is_admin = models.BooleanField(default=False)
 
-    objects = UsersTBLManager()
+    objects = UserTBLManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']  # You can add more fields here if needed
@@ -63,115 +62,4 @@ class UsersTBL(AbstractBaseUser):
 
 #################-INFLUENCERSTBL-###################
 
-class InfluencersTBL(models.Model):
-    influencer_id = models.AutoField(primary_key=True)
-    content_category = models.CharField(max_length=100)
-    youtube_url = models.CharField(max_length=255, unique=True)
-    facebook_url = models.CharField(max_length=255, unique=True)
-    instagram_url = models.CharField(max_length=255, unique=True)
-    tiktok_url = models.CharField(max_length=255, unique=True)
-    twitter_url = models.CharField(max_length=255, unique=True)
-
-    class Meta:
-        db_table = 'InfluencersTBL'
-
 #################-SPONSORSTBL-###################
-
-class SponsorsTBL(models.Model):
-    sponsor_id = models.AutoField(primary_key=True)
-    content_category = models.CharField(max_length=100)
-    sponsor_website = models.CharField(max_length=100)
-
-    class Meta:
-        db_table = 'SponsorsTBL'
-
-#################-MESSAGESTBL-###################
-
-class MessagingTBL(models.Model):
-    message_id = models.AutoField(primary_key=True)
-    sender_id = models.IntegerField()
-    receiver_id = models.IntegerField()
-    message_content = models.TextField()
-    message_time = models.DateTimeField()
-
-    class Meta:
-        db_table = 'MessagingTBL'
-
-#################-ADMINTBL-###################
-
-class AdminsTBL(models.Model):
-    admin_id = models.AutoField(primary_key=True)
-    action_type = models.CharField(max_length=100)
-
-    class Meta:
-        db_table = 'AdminsTBL'
-
-#################-YOUTUBETBL-###################
-
-class YouTubeTBL(models.Model):
-    youtube_id = models.AutoField(primary_key=True)
-    youtube_url = models.CharField(max_length=255, unique=True)
-    average_views = models.IntegerField()
-    average_engagement = models.IntegerField()
-    average_likes = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'YouTubeTBL'
-
-#################-FACEBOOKTBL-###################
-
-class FacebookTBL(models.Model):
-    facebook_id = models.AutoField(primary_key=True)
-    facebook_url = models.CharField(max_length=255, unique=True)
-    average_views = models.IntegerField()
-    average_engagement = models.IntegerField()
-    average_likes = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'FacebookTBL'
-
-#################-INSTAGRAMTBL-###################
-
-class InstagramTBL(models.Model):
-    instagram_id = models.AutoField(primary_key=True)
-    instagram_url = models.CharField(max_length=255, unique=True)
-    average_views = models.IntegerField()
-    average_engagement = models.IntegerField()
-    average_likes = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'InstagramTBL'
-
-#################-TIKTOKTBL-###################
-
-class TiktokTBL(models.Model):
-    tiktok_id = models.AutoField(primary_key=True)
-    tiktok_url = models.CharField(max_length=255, unique=True)
-    average_views = models.IntegerField()
-    average_engagement = models.IntegerField()
-    average_likes = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'TiktokTBL'
-
-#################-TWITTERTBL-###################
-
-class TwitterTBL(models.Model):
-    twitter_id = models.AutoField(primary_key=True)
-    twitter_url = models.CharField(max_length=255, unique=True)
-    average_views = models.IntegerField()
-    average_engagement = models.IntegerField()
-    average_likes = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'TwitterTBL'

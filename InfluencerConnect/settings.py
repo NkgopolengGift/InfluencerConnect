@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-c)(asx1)rf$7^)cqqqab4!hjr#f*wy-bp3mlr0=tatm%2^=*@(
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '10.2.37.172'
+    '*'
 ]
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'baseApplication.apps.BaseapplicationConfig',
 ]
 #I added this code to solve the login function
-AUTH_USER_MODEL = 'baseApplication.UsersTBL'
+AUTH_USER_MODEL = 'baseApplication.UserTBL'
 
 
 MIDDLEWARE = [

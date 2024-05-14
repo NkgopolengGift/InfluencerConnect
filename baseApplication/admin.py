@@ -1,6 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import UsersTBL
+from .models import UserTBL
 
-admin.site.register(UsersTBL)
+admin.site.register(UserTBL)

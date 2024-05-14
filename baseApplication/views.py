@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import UsersTBL
+from .models import UserTBL
 
 #####################-START PAGE-####################### 
 def index(request):
@@ -44,20 +44,23 @@ def logout_view(request):
 def signup(request):
     if request.method == 'POST':
        
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         phone_number = request.POST.get('phoneNumber')
         password = request.POST.get('password')
-        confirmPassword = request.POST.get('confirmPassword')
         account_type = request.POST.get('type')
 
         # Check if the username
-        if UsersTBL.objects.filter(username=username).exists():
+        if UserTBL.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return render(request, 'signup_view.html')
 
         # Create new user object
-        new_user = UsersTBL(
+        new_user = UserTBL(
+            first_name=first_name,
+            last_name=last_name,
             username=username,
             email=email,
             phone_number=phone_number,

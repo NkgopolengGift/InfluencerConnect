@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -23,8 +24,16 @@
             {% csrf_token %}
             <div class="main-user-info">
                 <div class="user-input-box">
-                    <label for="username">Full Name</label>
-                    <input type="text" id="fullName" name="username" placeholder="Enter Full Name" required>
+                    <label for="username">First Name</label>
+                    <input type="text" id="fullName" name="first_name" placeholder="Enter your first name" required>
+                </div>
+                <div class="user-input-box">
+                    <label for="username">Last Name</label>
+                    <input type="text" id="fullName" name="last_name" placeholder="Enter your last name">
+                </div>
+                <div class="user-input-box">
+                    <label for="username">Username</label>
+                    <input type="text" id="fullName" name="username" placeholder="choose username" required>
                 </div>
                 <div class="user-input-box">
                     <label for="email">Email</label>
@@ -32,7 +41,7 @@
                 </div>
                 <div class="user-input-box">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" required>
+                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number">
                 </div>
                 <div class="user-input-box">
                     <label for="password">Password</label>
@@ -46,20 +55,17 @@
             <div class="gender-details-box">
                 <span class="gender-title">Account Type</span>
                 <div class="gender-category">
-                    <input type="radio" name="type" id="influencer" value="influencer" required>
+                    <input type="radio" name="type" id="influencer" value="INFLUENCER" required>
                     <label for="influencer">Influencer</label>
 
-                    <input type="radio" name="type" id="sponsor" value="sponsor" required>
+                    <input type="radio" name="type" id="sponsor" value="SPONSOR" required>
                     <label for="sponsor">Sponsor</label>
-
-                    <input type="radio" name="type" id="admin" value="admin" required>
-                    <label for="admin">Admin</label>
                 </div>
             </div>
             <div class="form-submit-btn">
                 <input type="submit" value="Sign up">
             </div>
-            <div class="signup-link">Already have an account? <a href="{% url "login_view" %}">Login here</a></div>
+            <div class="signup-link">Already have an account? <a href="{% url "index" %}">Login here</a></div>
         </form>
     </div>
 </body>
