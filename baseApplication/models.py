@@ -34,7 +34,7 @@ class UserTBL(AbstractBaseUser):
     username = models.CharField(max_length=70, unique=True)
     email = models.EmailField(max_length=70)
     phone_number = models.CharField(max_length=30)
-    account_type = models.CharField(max_length=50)
+    account_type = models.CharField(max_length=15)
     last_login = models.DateTimeField(null=True, blank=True)
     
     # New field added here
@@ -84,14 +84,14 @@ class Sponsor(models.Model):
 
 class Platform(models.Model):
     platform_id = models.AutoField(primary_key=True)
-    username = models.ForeignKey(Influencer, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(Influencer, on_delete=models.CASCADE)
     platform_name = models.CharField(max_length=100)
     platform_url = models.CharField(max_length=200, unique=True)
-    average_views = models.IntegerField()
-    average_likes = models.IntegerField()
-    average_engagement = models.IntegerField()
-    subscribers_count = models.IntegerField()
-    last_post_date = models.DateTimeField()
+    average_views = models.IntegerField(null=True, blank=True)
+    average_likes = models.IntegerField(null=True, blank=True)
+    average_engagement = models.IntegerField(null=True, blank=True)
+    subscribers_count = models.IntegerField(null=True, blank=True)
+    last_post_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.platform_name

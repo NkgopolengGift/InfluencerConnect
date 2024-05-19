@@ -4,45 +4,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import UserTBL
+from .models import Sponsor
+from .models import Influencer
+from .models import Platform
 
 #####################-START PAGE-####################### 
 def index(request):
     return render(request, 'index.html')
 
-
-#####################-LOGIN-#######################
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')  
-        
-        if username and password:
-            user = authenticate(username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'You have logged in successfully.')
-                
-                if user.account_type == 'admin':
-                    return redirect('adminpage')
-                else:
-                    return redirect('home')
-            else:
-                messages.error(request, 'Invalid credentials, try again.')
-                return render(request, 'login_view.html')
-        else:
-            messages.error(request, 'Please fill all fields')
-            return render(request, 'login_view.html')
-    else:
-        return render(request, 'login_view.html')
-#####################-LOGOUT-#######################
-def logout_view(request):
-    logout(request)
-    messages.success(request,'Logged out succesfully')
-    return redirect('index')
-
-#####################-SIGN UP-#######################
-def signup(request):
+#####################-Sign Up-####################### 
+def signUp(request):
     if request.method == 'POST':
        
         first_name = request.POST.get('first_name')
@@ -55,8 +26,8 @@ def signup(request):
 
         # Check if the username
         if UserTBL.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
-            return render(request, 'signup_view.html')
+            messages.error(request, "User exists. Login")
+            return render(request, 'signin.html')
 
         # Create new user object
         new_user = UserTBL(
@@ -70,12 +41,101 @@ def signup(request):
         )
         
         new_user.save()
-        messages.success(request, "Your account has been successfully created. LogIn")
-        return redirect('index')
+        context = {'username': username, 'account_type': account_type}
+        return render(request, 'platform.html', context)
+    return render(request, 'signup.html')
 
+#####################-Enter Sponor Details-####################### 
+def sponsorPlatform(request):
+    if request.method == 'POST':
+       
+        content_category = request.POST.get('content_category')
+        website = request.POST.get('website')
+        username = request.POST.get('username')
+
+        # Check if the user exists in UserTBL
+        try:
+            user = UserTBL.objects.get(username=username)
+        except UserTBL.DoesNotExist:
+            messages.error(request, "User does not exist.")
+            return redirect('signup')
+
+        # Create new Sponsor record
+        new_sponsor = Sponsor(
+            user=user,
+            content_category=content_category,
+            website=website,
+        )
+        new_sponsor.save()
+
+        messages.success(request, "Your account is set up successfully. Login")
+        return redirect('signin')
     else:
-        return render(request, 'signup_view.html')
+        return render(request, 'signin.html')
     
+#####################-Enter Influencer Details-####################### 
+def influencerPlatform(request):
+    if request.method == 'POST':
+       
+        platform_name = request.POST.get('platform_name')
+        platform_url = request.POST.get('platform_url')
+
+        content_category = request.POST.get('content_category')
+        username = request.POST.get('username')
+
+        try:
+            user = UserTBL.objects.get(username=username)
+        except UserTBL.DoesNotExist:
+            messages.error(request, "User does not exist.")
+            return redirect('signup')
+
+        # Create new Influencer record
+        new_influencer = Influencer(
+            user=user,
+            username=username,
+            content_category=content_category,
+        )
+        new_influencer.save()
+
+        # Create new Platform record
+        new_platform = Platform(
+            user_id=new_influencer,
+            platform_name=platform_name,
+            platform_url=platform_url,
+        )
+        new_platform.save()
+
+        messages.success(request, "Your account is active. Login")
+        return redirect('signin')
+    else:
+        return render(request, 'signin.html')
+
+#####################-Sign In-####################### 
+def signIn(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')  
+        
+        if username and password:
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'You have logged in successfully.')
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid credentials, try again.')
+                return render(request, 'signin.html')
+    else:
+        return render(request, 'signin.html')
+
+#####################-Sign out-#######################
+def signOut(request):
+    logout(request)
+    messages.success(request,'You have logged out')
+    return redirect('index')
+
+
 #####################-SPONSER-####################### 
 def sponser(request):
     return render(request, 'sponser.html')

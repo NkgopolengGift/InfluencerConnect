@@ -3,12 +3,15 @@ from . import views
 
 urlpatterns = [
 
-    path('login_view/', views.login_view, name='login_view'),
-    path('logout_view/', views.logout_view, name='logout_view'),
-
     path('', views.index, name='index'),
-    path('sponser/', views.sponser, name='sponser'),
-    path('signup/', views.signup, name='signup'),
+
+    path('signup/', views.signUp, name='signup'),
+    path('signin/', views.signIn, name='signin'),
+    path('signout/', views.signOut, name='signout'),
+
+    path('sponser/', views.sponsorPlatform, name='sponser'),
+    path('influencer/', views.influencerPlatform, name='influencer'),
+
     path('home/', views.home, name='home'),
     path('adminpage/', views.adminpage, name='adminpage'),
 

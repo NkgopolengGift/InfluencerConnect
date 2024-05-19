@@ -10,7 +10,7 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background-color: #288CEE;
+    background-image: linear-gradient(180deg, #c4b6fd, #93acfc);
 }
 
 .container {
@@ -92,6 +92,7 @@ body {
 
 .form-submit-btn {
     margin-top: 40px;
+    
 }
 
 .form-submit-btn input {
@@ -103,11 +104,11 @@ body {
     border: none;
     border-radius: 3px;
     color: rgb(209, 209, 209);
-    background: rgba(63, 114, 76, 0.7);
+    background-color: #0a58ca !important;
 }
 
 .form-submit-btn input:hover {
-    background: rgba(56, 204, 93, 0.7);
+    background-color: #0a58ca !important;
     color: rgb(255, 255, 255);
 }
 
@@ -118,8 +119,7 @@ body {
     color: white;
 }
 
-.signup-link a {
-    background: #18538C;
+.signup-link a {   
     text-decoration: none;
 }
 
