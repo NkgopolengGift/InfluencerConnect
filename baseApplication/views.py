@@ -200,7 +200,7 @@ def generate_random_date(start_date, end_date):
 def get_youtube_channel_data(channel_id):
 
     # Initialize the YouTube Data API client
-    api_key = 'AIzaSyDUU7CJNvqCpvkhlrieuZhQel8JpjIm7bI'
+    api_key = 'vvgbggfodnmchdfh'
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     try:
@@ -242,3 +242,5 @@ def get_youtube_channel_data(channel_id):
     except HttpError as e:
         print('An error occurred:', e)
         return None
+    
+#############-Feaching Facebook data-##################
