@@ -13,7 +13,8 @@ urlpatterns = [
     path('influencer/', views.influencerPlatform, name='influencer'),
 
     path('home/', views.home, name='home'),
-    path('adminpage/', views.adminpage, name='adminpage'),
+    #path('summary/', views.summary_report, name='summary'),
+    #path('csv_report', views.export_csv, name='csv_report'),
 
     path('profile/', views.profile, name='profile'),
     path('delete_account/', views.delete_account, name="delete_account"),

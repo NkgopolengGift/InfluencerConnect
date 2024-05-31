@@ -4,69 +4,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
     <title>home page</title>
+    <!--==========Font Awesome Link===========-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <div class="logo"> 
-                <h2>InfluencerConnect</h2>
-            </div>
-            <ul class="menu">
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'profile' %}">Profile</a></li>
-                <li><a href="#">Messages</a></li> 
-            </ul>
-            
-             <a href="{% url 'logout_view' %}" class="signup-btn">Log Out</a>
-        </nav>
-    </div> 
-    
-    <div class="thebody">
-        <p>User details</p>
-        <form method="post" action="/profile/">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td>Username: </td>
-                    <td><input type="text" name="username" value="{{ user.username }}" /></td>
-                </tr>
-                <tr>
-                    <td>Email: </td>
-                    <td><input type="text" name="email" value="{{ user.email }}" /></td>
-                </tr>
-                <tr>
-                    <td>Phone number: </td>
-                    <td><input type="text" name="phone_number" value="{{ user.phone_number }}" /></td>
-                </tr>
-                <tr>
-                    <td>Account type: </td>
-                    <td><input type="text" name="account_type" value="{{user.account_type}}" /></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button type="submit">UPDATE ACCOUNT</button> 
-                    </td>
-                </tr>
-            </table>
-        </form>
 
-        <!--Delete Account -->
-        <form method="post" action="/delete_account/">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td></td>
-                    
-                    <td>
-                        <button type="submit">DELETE ACCOUNT</button> 
-                    </td>
-                </tr>
-            </table>
-        </form>
+    <!-- header section start -->
+    <header>
+        <div class="header-container">
+            <div class="header-wrapper">
+                <div class="logoBox">
+                    <h3>InfluencerConnect</h3>
+                </div>
+                <div class="searchBox">
+                    <input type="search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="iconBox2">
+                    <i class="fa-solid fa-house"></i>
+                    <i class="fa-brands fa-facebook-messenger"></i>
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+<!-- header section end -->
+<!-- home section start -->
+
+
+<div class="home">
+    <div class="container">
+        <div class="home-weapper">
+
+            <!-- home left start here -->
+            <div class="home-left">
+
+                <div class="profile"> 
+                    <h3>
+                        <img src="{% static "images/us2.png" %}" alt="messenger">
+                        {% if user.is_authenticated %} {{ user.username }}{% endif %}
+                    </h3>
+                </div>
+               
+                <div class="pages">
+                    <h4 class="mini-headign">Chat</h4>
+                    <label>
+                        <img src="{% static "images/us2.png" %}" alt="messenger">
+                        <span>messenger</span>
+                    </label>
+                </div>
+
+                <div class="explore">
+                    <h4 class="mini-headign">MENU</h4>
+                   
+                    <div>
+                        <a href="{% url "home" %}">Home</a>
+                    </div>
+                    <div>
+                        <a href="{% url "signout" %}">Logout</a>
+                    </div>
+                </div>
+                
+            </div><!-- home left end here -->
+
+            <!-- home center start here -->
+
+            <div class="home-center">
+                <div class="home-center-wrapper">
+                   
+                    <div class="fb-post1">
+                        <div class="fb-post1-container">
+                            <div class="fb-post1-header">
+                                <ul>
+                                    <li class="active">Profile details</li>
+                                </ul>
+                            </div>
+                            <div class="fb-p1-main">
+                                <div class="post-title">
+                                    <img src="{% static "images/us2.png" %}" alt="user picture">
+                                    <ul>
+                                        <li><h3> <span></span></h3></li>
+                                        <li><span></span></li>
+                                    </ul>
+                                    <p>
+                                        <form method="post" action="/profile/">
+                                            {% csrf_token %}
+                                            <table>
+                                                <tr>
+                                                    <td>Username: </td>
+                                                    <td><input type="text" name="username" value="{{ user.username }}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Email: </td>
+                                                    <td><input type="text" name="email" value="{{ user.email }}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Phone number: </td>
+                                                    <td><input type="text" name="phone_number" value="{{ user.phone_number }}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Account type: </td>
+                                                    <td><input type="text" name="account_type" value="{{user.account_type}}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <button type="submit">UPDATE ACCOUNT</button> 
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                        <form method="post" action="/delete_account/">
+                                            {% csrf_token %}
+                                            <table>
+                                                <tr>
+                                                    <td></td>
+                                                    
+                                                    <td>
+                                                        <button type="submit">DELETE ACCOUNT</button> 
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- home center wrapper end -->
+            </div> <!-- home center end -->
+
+            <div class="home-right">
+                <div class="home-right-wrapper">
+                    <div class="messenger">
+                        <div class="messenger-search">
+                            <i class="fa-solid fa-user-group"></i>
+                            <h4></h4>
+                            
+                        </div>
+                        <ul>
+                            <li>
+                                <img src="{% static "images/us2.png" %}" alt="user">
+                                <b><span></span></b>    
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- home right wrapper end -->
+            </div><!-- home right end -->
+
+        </div>
     </div>
 </div>
+<!-- home section end -->
+
+    <script src="{% static 'scripts/main.js' %}" ></script>
 </body>
 </html>
