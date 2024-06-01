@@ -49,21 +49,17 @@ header{
     padding: 0 8px;
     justify-content: space-between;
 }
+
 .logoBox{
     width: 7%;
+    color: blue;
+    font-size: larger;
 }
 
 .searchBox{
-    width: 38%;
+    width: 30%;
     position: relative;
 }
-/*.iconBox2{
-    width: 25%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 25px;
-    position: relative;
-}*/
 .searchBox input{
     padding: 15px 45px 15px 15px;
     border-radius: 50px;
@@ -212,259 +208,15 @@ header{
 /* home section end here */
 
 /* home center section start here */
-
-.home-center{
-    width: 50%;
-    overflow: hidden;
-}
-.home-center .stories,
-.home-center .createPost{
-    background: var(--white);
-    box-shadow: 0 2px 5px 0 var(--shadow);
-    border-radius: 20px;
-    padding: 15px;
-    margin-bottom: 20px;
+.youtube-channel-details {
+    margin-bottom: 2em;
 }
 
-.stories-wrapper{
-    display: flex;
-    justify-content: space-between;
-    height: 170px;
-    margin-bottom: 12px;
+canvas {
+    max-width: 700px;  /* Maximum width for the bar chart */
+    max-height: 400px; /* Maximum height for the bar chart */
+    margin: 0 auto; 
 }
-
-.home-center .mini-headign{
-    color: #1877f2;
-    margin-bottom: 10px;
-}
-.single-stories{
-    width: 18%;
-    position: relative;
-    padding-top: 25px;
-}
-.single-stories label{
-    width: 45px;
-    height: 45px;
-    background: #daeaff;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    border-radius: 50px;
-    overflow: hidden;
-    border: 3px solid #1877f2;
-}
-.single-stories label img{
-    width: 100%;
-}
-.single-stories > div{
-    width: 100%;
-    overflow: hidden;
-    height: 100%;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 1px 6px 6px 0 var(--shadow);
-}
-.single-stories > div img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.single-stories > div b{
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    color: white;
-    font-weight: 400;
-    text-shadow: 0 1px 8px black;
-}
-.single-stories > div i{
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 25px;
-    color: white;
-}
-
-
-
-/* createPost start */
-
-.post-text{
-    width: 100%;
-    position: relative;
-    margin-bottom: 30px;
-}
-
-.post-text img{
-    width: 40px;
-    border-radius: 50px;
-    position: absolute;
-    left: 10px;
-    top: 30px;
-}
-.post-text input{
-    padding: 20px 20px 20px 60px;
-    width: 100%;
-    background: var(--foreground);
-    border: none;
-    height: 100px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px 0 var(--shadow);
-    color: var(--black);
-}
-
-.post-icon{
-    display: flex;
-    align-items: center;
-}
-.post-icon a{
-    margin-right: 10px;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #262626;
-    font-weight: 500;
-}
-.post-icon a i{
-    padding: 5px;
-    border-radius: 5px;
-    color: #fff;
-}
-/* createPost end */
-
-/* facebook post 01 start */
-
-.fb-post1{
-    background: var(--white);
-    box-shadow: 0 2px 5px 0 var(--shadow);
-    border-radius: 20px;
-    padding: 15px 20px;
-    padding-bottom: 20px;
-}
-.fb-post1-container{
-    display: flex;
-    flex-direction: column;
-}
-.fb-post1-header{
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 8px;
-}
-.fb-post1-header ul{
-    display: flex;
-}
-.fb-post1-header ul li{
-    text-transform: uppercase;
-    padding: 5px 10px;
-    font-weight: 600;
-    color: var(--gray);
-    transition: .4s;
-    cursor: pointer;
-}
-.fb-post1-header ul li:hover{
-    color: #3d3e42;
-}
-.fb-post1-header .active{
-    color: var(--black);
-    border-bottom: 3px solid #1877f2;
-}
-.fb-p1-main{
-    display: flex;
-    flex-direction: column;
-}
-.post-title{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: 15px 0;
-}
-.post-title img{
-    width: 50px;
-    border-radius: 50px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-}
-.post-title ul{
-    width: 87%;
-    margin-bottom: 20px;
-}
-.post-title ul li span{
-    color: var(--gray);
-    font-weight: 400;
-    font-size: 14px;
-}
-.post-title p{
-    color: var(--gray);
-}
-.post-title p a{
-    color: #4575b3;
-}
-.post-images{
-    display: flex;
-    justify-content: space-between;
-}
-.post-images1{
-    width: 60%;
-    overflow: hidden;
-}
-.post-images2{
-    width: 37%;
-    overflow: hidden;
-}
-.post-images1 img:nth-child(1){
-    width: 100%;
-    margin-bottom: 10px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-.post-images1 img:nth-child(2){
-    width: 47%;
-    margin-right: 4%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-.post-images1 img:nth-child(3){
-    width: 47%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-.post-images2 img{
-    width: 100%;
-    height: 335px;
-    border-radius: 15px;
-    object-fit: cover;
-}
-.like-comment{
-    width: 100%;
-    margin-top: 15px;
-}
-.like-comment ul{
-    display: flex;
-}
-.like-comment ul li{
-    margin-right: 20px;
-}
-.like-comment ul li img{
-    width: 20px;
-    margin-right: -5px;
-}
-.like-comment ul li i{
-    color: #9d9d9d;
-}
-.like-comment ul li span{
-    color: var(--gray);
-    margin-left: 10px;
-    font-size: 14px;
-}
-
-/* facebook post 01 end */
 /* home center section end here */
 
 /* home right start */

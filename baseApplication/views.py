@@ -151,6 +151,7 @@ def home(request):
                     'influencer_id': platform.influencer_id_id,
                     'channel_data': channel_data
                 })
+    print("YouTube Data:", youtube_data)            
     context = {
         'username': request.user.username,
         'youtube_data': youtube_data
@@ -177,6 +178,8 @@ def profile(request):
         return redirect('home')
     else:
         return render(request, 'profile.html')
+#############-Charting-##################
+
 
 #############-Delete account-##################
 def delete_account(request):
@@ -189,18 +192,10 @@ def delete_account(request):
         return render(request, 'delete_account.html')
 
 #############-Feaching YouTube data-##################
-def generate_random_date(start_date, end_date):
-    time_between_dates = end_date - start_date
-    days_between_dates = time_between_dates.days
-    random_number_of_days = random.randrange(days_between_dates)
-    random_date = start_date + timedelta(days=random_number_of_days)
-    return random_date
-
-#############-Feaching YouTube data-##################
 def get_youtube_channel_data(channel_id):
 
     # Initialize the YouTube Data API client
-    api_key = 'gfsdjkaskjrjijfgasn.knizguyaiSK'
+    api_key = 'AIzaSyDUU7CJNvqCpvkhlrieuZhQel8JpjIm7bI'
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     try:
@@ -268,4 +263,4 @@ def get_youtube_channel_data(channel_id):
         print('An error occurred:', e)
         return None
     
-#############-Feaching Facebook data-##################
+

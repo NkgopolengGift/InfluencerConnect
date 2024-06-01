@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
      crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+     <!--==========chat.js===========-->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -26,17 +27,16 @@
                     <i class="fas fa-search"></i>
                 </div>
                 <div class="iconBox2">
-                    <i class="fa-solid fa-house"></i>
-                    <i class="fa-brands fa-facebook-messenger"></i>
-                    <i class="fa-solid fa-bell"></i>
+                    <a href=""><i class="fa-solid fa-house">Home</i></a>
+                    <a href=""><i class="fas fa-user">Profile</i></a>
+                    <a href=""><i class="fas fa-comment">Chat</i></a>
+                    <a href="{% url "signout" %}"><i class="fas fa-sign-out-alt">Log out</i></a>
                 </div>
             </div>
         </div>
     </header>
 <!-- header section end -->
 <!-- home section start -->
-
-
 <div class="home">
     <div class="container">
         <div class="home-weapper">
@@ -44,6 +44,9 @@
             <!-- home left start here -->
             <div class="home-left">
 
+                <div class="pages">
+                    <h4 class="mini-headign">Profile</h4>
+                </div>
                 <div class="profile"> 
                     <h3>
                         <img src="{% static "images/us2.png" %}" alt="messenger">
@@ -51,25 +54,13 @@
                     </h3>
                 </div>
                
-                <div class="pages">
-                    <h4 class="mini-headign">Chat</h4>
-                    <label>
-                        <img src="{% static "images/us2.png" %}" alt="messenger">
-                        <span>messenger</span>
-                    </label>
-                </div>
-
                 <div class="explore">
-                    <h4 class="mini-headign">MENU</h4>
-                   
                     <div>
-                        <a href="{% url "profile" %}">Manage Profile</a>
+                        <a href="{% url "profile" %}">Update your account details</a>
                     </div>
+
                     <div>
-                        <a href="">Summary</a>
-                    </div>
-                    <div>
-                        <a href="{% url "signout" %}">Logout</a>
+                        <a href="{% url "signout" %}">Delete your account</a>
                     </div>
                 </div>
                 
@@ -80,14 +71,54 @@
                 <div class="home-center-wrapper">
                     {% for data in youtube_data %}
                         <div class="youtube-channel-details">
-                            <h3>YouTube Channel Data for Influencer ID: {{ data.influencer_id }}</h3>
-                            <p>Likes: {{ data.channel_data.likes }}</p>
-                            <p>Views: {{ data.channel_data.views }}</p>
-                            <p>Subscribers: {{ data.channel_data.subscribers }}</p>
-                            <p>Comments: {{ data.channel_data.comments }}</p>
-                            <p>Videos: {{ data.channel_data.videos }}</p>
-                            <p>Channel Title: {{ data.channel_data.channel_title }}</p>
-                            <p>Creation Date: {{ data.channel_data.creation_date }}</p>
+                            <h3>YouTube Channel Data for Influencer: {{ data.influencer_id }}</h3>
+                            <canvas id="youtubeChart{{ forloop.counter }}"></canvas>
+                            <script>
+                                const ctx{{ forloop.counter }} = document.getElementById('youtubeChart{{ forloop.counter }}').getContext('2d');
+                                const myChart{{ forloop.counter }} = new Chart(ctx{{ forloop.counter }}, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: ['Likes', 'Views', 'Subscribers', 'Comments', 'Videos'],
+                                        datasets: [{
+                                            label: 'Channel Data',
+                                            data: [
+                                                {{ data.channel_data.likes }},
+                                                {{ data.channel_data.views }},
+                                                {{ data.channel_data.subscribers }},
+                                                {{ data.channel_data.comments }},
+                                                {{ data.channel_data.videos }}
+                                            ],
+                                            backgroundColor: [
+                                                'rgba(255, 99, 132, 0.2)',
+                                                'rgba(54, 162, 235, 0.2)',
+                                                'rgba(255, 206, 86, 0.2)',
+                                                'rgba(75, 192, 192, 0.2)',
+                                                'rgba(153, 102, 255, 0.2)'
+                                            ],
+                                            borderColor: [
+                                                'rgba(255, 99, 132, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(255, 206, 86, 1)',
+                                                'rgba(75, 192, 192, 1)',
+                                                'rgba(153, 102, 255, 1)'
+                                            ],
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'YouTube Channel Data'
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
                         </div>
                     {% endfor %}
                 </div>
