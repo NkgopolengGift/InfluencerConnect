@@ -200,38 +200,63 @@ def generate_random_date(start_date, end_date):
 def get_youtube_channel_data(channel_id):
 
     # Initialize the YouTube Data API client
-    api_key = 'vvgbggfodnmchdfh'
+    api_key = 'gfsdjkaskjrjijfgasn.knizguyaiSK'
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     try:
         # Call the channels.list method to retrieve channel statistics
-        response = youtube.channels().list(
-            part='statistics',
+        details_response = youtube.channels().list(
+            part='statistics,snippet,contentDetails',
             id=channel_id
         ).execute()
 
-        # Extract relevant statistics
-        statistics = response['items'][0]['statistics']
-        likes = statistics.get('likeCount', 0)
+        channel = details_response['items'][0]
+        snippet = channel['snippet']
+        statistics = channel['statistics']
+        uploads_playlist_id = channel['contentDetails']['relatedPlaylists']['uploads']
+
+        channel_title = snippet.get('title', '')
+        creation_date = snippet.get('publishedAt', '')
         views = statistics.get('viewCount', 0)
         subscribers = statistics.get('subscriberCount', 0)
-        comments = statistics.get('commentCount', 0) 
         videos = statistics.get('videoCount', 0)
 
-        details_response = youtube.channels().list(
-            part='snippet',
-            id=channel_id  # Example channel ID
-        ).execute()
-         # Extract channel details
-        snippet = details_response['items'][0]['snippet']
-        channel_title = snippet.get('title', '')
-        creation_date = snippet.get('publishedAt', '') 
+        # Initialize totals
+        total_likes = 0
+        total_comments = 0
+
+        # Retrieve all videos in the uploads playlist
+        next_page_token = None
+        while True:
+            playlist_response = youtube.playlistItems().list(
+                part='contentDetails',
+                playlistId=uploads_playlist_id,
+                maxResults=50,
+                pageToken=next_page_token
+            ).execute()
+
+            video_ids = [item['contentDetails']['videoId'] for item in playlist_response['items']]
+
+            # Get statistics for each video
+            video_response = youtube.videos().list(
+                part='statistics',
+                id=','.join(video_ids)
+            ).execute()
+
+            for video in video_response['items']:
+                video_stats = video['statistics']
+                total_likes += int(video_stats.get('likeCount', 0))
+                total_comments += int(video_stats.get('commentCount', 0))
+
+            next_page_token = playlist_response.get('nextPageToken')
+            if not next_page_token:
+                break
 
         channel_data = {
-            'likes': likes,
+            'likes': total_likes,
             'views': views,
             'subscribers': subscribers,
-            'comments': comments,
+            'comments': total_comments,
             'videos': videos,
             'channel_title': channel_title,
             'creation_date': creation_date
