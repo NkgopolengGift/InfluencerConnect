@@ -7,6 +7,7 @@ from .models import UserTBL, Sponsor, Influencer, Platform
 from django.http import HttpResponse
 
 #############-For YouTube API-##################
+from decouple import config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 #############-For YouTube API-##################
@@ -195,7 +196,8 @@ def delete_account(request):
 def get_youtube_channel_data(channel_id):
 
     # Initialize the YouTube Data API client
-    api_key = 'AIzaSyDUU7CJNvqCpvkhlrieuZhQel8JpjIm7bI'
+    api_key = config('YOUTUBE_API_KEY')
+    print("API KEY :     "+api_key)
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     try:
