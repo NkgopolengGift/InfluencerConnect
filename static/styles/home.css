@@ -217,6 +217,23 @@ canvas {
     max-height: 400px; /* Maximum height for the bar chart */
     margin: 0 auto; 
 }
+
+.communicate-btn {
+    background-color: #1877f2;
+    color: #fff; 
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-left: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.communicate-btn:hover {
+    background-color: #0f5dbb; 
+}
+
 /* home center section end here */
 
 /* home right start */
@@ -492,3 +509,81 @@ canvas {
 
 
 /* home right end */
+
+
+/* Chat window styles */
+.chat-window {
+    display: none;  /* Hidden by default */
+    background: var(--white);
+    box-shadow: 0 2px 5px 0 var(--shadow);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    height: 400px; /* Adjust height as needed */
+    overflow-y: scroll;
+}
+
+.chat-window.active {
+    display: block;  /* Show when active */
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+.chat-message .sender {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chat-input {
+    display: flex;
+    align-items: center;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    margin-right: 10px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background-color: #0f5dbb;
+}
+
+button.back-button {
+    margin-bottom: 10px;
+    background-color: #1877f2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+button.back-button:hover {
+    background-color: #0f5dbb;
+}
+
+/* Messenger Section (User List) */
+.messenger {
+    display: flex;
+    flex-direction: column;
+}

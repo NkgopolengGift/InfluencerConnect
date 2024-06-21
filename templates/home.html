@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles/home.css' %}">
     <title>home page</title>
+
+
     <!--==========Font Awesome Link===========-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
      crossorigin="anonymous" referrerpolicy="no-referrer" />
      <!--==========chat.js===========-->
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <!-- =========== Chat engine ============== -->
+     <script src="https://cdn.chatengine.io/chat-engine-io.js"></script>
 </head>
 <body>
 
@@ -71,14 +75,19 @@
                 <div class="home-center-wrapper">
                     {% for data in youtube_data %}
                         <div class="youtube-channel-details">
-                            <h3>YouTube Channel Data for Influencer: {{ data.influencer_id }}</h3>
+                            <h3>YouTube Channel Data for Influencer: {{ data.influencer_username }}</h3>
                             <canvas id="youtubeChart{{ forloop.counter }}"></canvas>
+                            <br>
+                            <button class="form-control communicate-btn" onclick="communicateWithInfluencer('{{ data.influencer_id }}')">
+                                Communicate with this influencer
+                            </button>
+
                             <script>
                                 const ctx{{ forloop.counter }} = document.getElementById('youtubeChart{{ forloop.counter }}').getContext('2d');
                                 const myChart{{ forloop.counter }} = new Chart(ctx{{ forloop.counter }}, {
                                     type: 'pie',
                                     data: {
-                                        labels: ['Likes', 'Views', 'Subscribers', 'Comments', 'Videos'],
+                                        labels: ['Likes: ', 'Views: ', 'Subscribers', 'Comments', 'Videos'],
                                         datasets: [{
                                             label: 'Channel Data',
                                             data: [
@@ -124,30 +133,99 @@
                 </div>
             </div>
             <!-- home center end -->
-
+            <!-- Home Right -->
             <div class="home-right">
                 <div class="home-right-wrapper">
-                    <div class="messenger">
+                    <!-- Messenger Section (User List) -->
+                    <div id="user-list" class="messenger">
                         <div class="messenger-search">
                             <i class="fa-solid fa-user-group"></i>
-                            <h4>Messenger</h4>
-                            
+                            <h4>Chats</h4>
+                            <input type="text" name="receiver" required>
                         </div>
                         <ul>
-                            <li>
-                                <img src="{% static "images/us2.png" %}" alt="user">
-                                <b>Place holder <span>Online</span></b>    
+                            <!-- Example Influencer List -->
+                            <li onclick="openChat('influencer1')">
+                                <img src="influencer1.jpg" alt="">
+                                <b>Influencer 1<span>Last message...</span></b>
                             </li>
+                            <!-- Add more influencers as needed -->
                         </ul>
                     </div>
-
-                </div><!-- home right wrapper end -->
-            </div><!-- home right end -->
-
-        </div>
-    </div>
-</div>
-<!-- home section end -->
+            
+                    <!-- Chat Window -->
+                    <div id="chat-window" class="chat-window">
+                        <!-- Chat content will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Home Right Wrapper End -->
+    </div><!-- Home Right End -->
+    <script>
+        function openChat(influencerId) {
+            // Hide the user list and show the chat window
+            document.getElementById('user-list').style.display = 'none';
+            const chatWindow = document.getElementById('chat-window');
+            chatWindow.classList.add('active');
+            
+            // Example: Load messages (replace with actual data fetching logic)
+            const messages = [
+                { sender: 'Influencer', text: 'Hello!' },
+                { sender: 'You', text: 'Hi there!' },
+                { sender: 'Influencer', text: 'How can I help you today?' }
+            ];
+        
+            let chatContent = '<button class="back-button" onclick="closeChat()">Back to Chats</button><div class="chat-messages">';
+            messages.forEach(message => {
+                chatContent += `<div class="chat-message">
+                    <div class="sender">${message.sender}</div>
+                    <div class="text">${message.text}</div>
+                </div>`;
+            });
+            chatContent += '</div>';
+            
+            // Add input box for new messages
+            chatContent += `<div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button onclick="sendMessage('${influencerId}')">Send</button>
+            </div>`;
+        
+            chatWindow.innerHTML = chatContent;
+        }
+        
+        function closeChat() {
+            // Hide the chat window and show the user list
+            document.getElementById('chat-window').classList.remove('active');
+            document.getElementById('chat-window').innerHTML = ''; // Clear chat content
+            document.getElementById('user-list').style.display = 'block';
+        }
+        
+        function sendMessage(influencerId) {
+            const inputBox = document.getElementById('chat-input');
+            const message = inputBox.value;
+        
+            if (message.trim() !== '') {
+                // Send message to the server (add your AJAX call or fetch API logic here)
+                // Example:
+                // fetch('/send-message', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ influencerId, message })
+                // });
+        
+                // Append the new message to the chat window (for demonstration purposes)
+                const chatMessages = document.querySelector('.chat-messages');
+                chatMessages.innerHTML += `<div class="chat-message">
+                    <div class="sender">You</div>
+                    <div class="text">${message}</div>
+                </div>`;
+        
+                // Clear the input box
+                inputBox.value = '';
+            }
+        }
+    </script>
 
     <script src="{% static 'scripts/main.js' %}" ></script>
 </body>

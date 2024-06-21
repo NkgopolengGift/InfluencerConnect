@@ -68,7 +68,7 @@ class Influencer(models.Model):
     content_category = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 #################-SPONSORTBL-###################
 
@@ -88,6 +88,11 @@ class Platform(models.Model):
     influencer_id = models.ForeignKey(Influencer, on_delete=models.CASCADE)
     platform_name = models.CharField(max_length=100)
     platform_url = models.CharField(max_length=200, unique=True)
+    likes = models.IntegerField(default=0) 
+    views = models.IntegerField(default=0) 
+    subscribers = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0) 
+    videos = models.IntegerField(default=0)
 
     def __str__(self):
         return self.platform_name
@@ -97,11 +102,11 @@ class Chat(models.Model):
     chat_id = models.AutoField(primary_key=True)
     influencer_id = models.ForeignKey(Influencer, on_delete=models.CASCADE)
     sponser_id = models.ForeignKey(Sponsor, on_delete=models.CASCADE)
-    message_content = models.CharField(max_length=245, null=False)
-    time = models.DateTimeField(null=True, blank=True)
+    content = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"From {self.sender.username} to {self.receiver.username}"
+        return f"Chat between {self.influencer.user.username} and {self.sponsor.user.username} at {self.time}"
 
 #################-Payment-###################
 

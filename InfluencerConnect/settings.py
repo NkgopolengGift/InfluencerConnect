@@ -10,6 +10,10 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 YOUTUBE_API_KEY = config('YOUTUBE_API_KEY')
 
+CHAT_ENGINE_PROJECT_ID = config('CHAT_ENGINE_PROJECT_ID')
+CHAT_ENGINE_PRIVATE_KEY = config('CHAT_ENGINE_PRIVATE_KEY')
+
+
 ALLOWED_HOSTS = [
     '*'
 ]
@@ -26,9 +30,21 @@ INSTALLED_APPS = [
 
     'baseApplication.apps.BaseapplicationConfig',
     'rest_framework',
+    'channels',
 ]
-#I added this code to solve the login function
+#For Login
 AUTH_USER_MODEL = 'baseApplication.UserTBL'
+
+# For chatting 
+ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 MIDDLEWARE = [
@@ -72,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'InfluencerConnectDB',
         'USER': 'postgres',
-        'PASSWORD': '@Nkgopoleng_29',
+        'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     }

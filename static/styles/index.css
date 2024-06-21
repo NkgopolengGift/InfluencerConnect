@@ -70,4 +70,25 @@
     border: none;
     color: #fff !important;
   }
-  
+
+
+  .footerIcon a{
+    text-decoration: none;
+    padding: 13px;
+    background-color: white;
+    margin: 4px;
+    border-radius: 17px;
+  }
+  .footerIcon a i{
+    font-size: 1.2rem;
+    color: #0a58ca ;
+    opacity: 0.9;
+  }
+  .footerIcon a:hover{
+     background-color: #111;
+     transition: 0.5s;
+  }
+  .footerIcon a i:hover{
+    color: white;
+    transition: 0.5s;
+  }

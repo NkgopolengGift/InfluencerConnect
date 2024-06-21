@@ -10,6 +10,8 @@
     crossorigin="anonymous">
     <!--Bootstrap CSS end-->
     <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>InfluencerConnect</title>
 </head>
 <body>
@@ -79,7 +81,7 @@
                       class="btn btn-primary px-5 py-3 mt-3 fs-5 fw-medium"
                       type="button"
                     >
-                      Sign Up
+                      Register
                     </button>
                   </a>
                   <a href="{% url "signin" %}">
@@ -87,7 +89,7 @@
                       class="btn btn-primary px-5 py-3 mt-3 fs-5 fw-medium"
                       type="button"
                     >
-                      Sign In
+                      Login
                     </button>
                   </a>
 
@@ -143,9 +145,23 @@
 
     <!--Contact section start-->
     <footer id="contact" class="footer-section">
-        <p class="text-center py-5 mb-0">
-          &copy; 2024 InfluencerConnect. All rights reserved.
-        </p>
+      <div class="container text-center py-4 footerIcon">
+          <a href="https://www.facebook.com/YourPage" target="_blank">
+              <i class="fa-brands fa-facebook"></i>
+          </a>
+          <a href="https://www.facebook.com/YourPage" target="_blank">
+              <i class="fa-brands fa-instagram"></i>
+          </a>
+              <a href="https://www.facebook.com/YourPage" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+
+
+          <p class="text-center py-5 mb-0">
+            &copy; 2024 InfluencerConnect. All rights reserved.
+          </p>
+        </div>
+        
       </footer>
     <!--Contact section ends-->
     <!--Bootstrap JS start-->

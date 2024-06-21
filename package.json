@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "chat-engine": "^0.9.21"
+  }
+}
