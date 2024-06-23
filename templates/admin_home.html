@@ -4,17 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/admin_home.css' %}">
-    <title>home page</title>
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <title>Home Page</title>
 
-
-    <!--==========Font Awesome Link===========-->
+    <!-- Font Awesome Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
      crossorigin="anonymous" referrerpolicy="no-referrer" />
-     <!--==========chat.js===========-->
+     <!-- Chart.js -->
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <!-- =========== Chat engine ============== -->
+     <!-- Chat engine -->
      <script src="https://cdn.chatengine.io/chat-engine-io.js"></script>
 </head>
 <body>
@@ -26,86 +25,134 @@
                 <div class="logoBox">
                     <h3>InfluencerConnect</h3>
                 </div>
-                <div class="searchBox">
-                    <input type="search">
-                    <i class="fas fa-search"></i>
-                </div>
+
                 <div class="iconBox2">
                     <a href=""><i class="fa-solid fa-house">Home</i></a>
-                    <a href=""><i class="fas fa-user">Profile</i></a>
+                    <a href="{% url "update_profile" %}"><i class="fas fa-user">Profile</i></a>
                     <a href="{% url "signout" %}"><i class="fas fa-sign-out-alt">Log out</i></a>
                 </div>
             </div>
         </div>
     </header>
-<!-- header section end -->
-<!-- home section start -->
-<div class="home">
-    <div class="container">
-        <div class="home-weapper">
+    <!-- header section end -->
 
-            <!-- home left start here -->
-            <div class="home-left">
-
-                <div class="pages">
-                    <h4 class="mini-headign">Profile</h4>
-                </div>
-                <div class="profile"> 
-                    <h3>
-                        <img src="{% static "images/us2.png" %}" alt="messenger">
-                        {% if user.is_authenticated %} {{ user.username }}{% endif %}
-                    </h3>
-                </div>
-               
-                <div class="explore">
-                    <div>
-                        <a href="{% url "profile" %}">Update your account details</a>
+    <!-- home section start -->
+    <div class="home">
+        <div class="container">
+            <div class="home-weapper">
+                <!-- home left start here -->
+                <div class="home-left">
+                    <div class="pages">
+                        <h4 class="mini-headign">Profile</h4>
                     </div>
-
-                    <div>
-                        <a href="{% url "signout" %}">Delete your account</a>
+                    <div class="profile"> 
+                        <h3>
+                            <img src="{% static "images/us2.png" %}" alt="messenger">
+                            {% if user.is_authenticated %} {{ user.username }}{% endif %}
+                        </h3>
                     </div>
-                </div>
-                
-            </div><!-- home left end here -->
-
-            <!-- home center start here -->
-            <div class="home-center">
-                <div class="home-center-wrapper">
-                    <h2>Generate Reports</h2>
-                    <button onclick="generateReport('influencer-performance')">Influencer Performance Reports</button>
-                    <button onclick="generateReport('audience-demographics')">Audience Demographics Reports</button>
-                    <button onclick="generateReport('platform-performance')">Platform Performance Reports</button>
-                </div>
-            </div>
-            <!-- home center end -->
-            <!-- Home Right -->
-            <div class="home-right">
-                <div class="home-right-wrapper">
-                    <!-- Messenger Section (User List) -->
-                    <div id="user-list" class="messenger">
-                        <div class="messenger-search">
-                            <h4></h4>
+                    <div class="explore">
+                        <div>
+                            <a href="{% url "update_profile" %}">Update your account details</a>
                         </div>
-                        <ul>
-                          
+                        <div>
+                            <a href="{% url "delete_account" %}">Delete your account</a>
+                        </div>
+                        <div>
+                            <a  onclick="toggleReport('payment-transaction')">Generate Payment Report</a>
+                        </div>
+                        <div>
+                            <a  onclick="toggleReport('user-activity')">User Activity Reports</a>
+                        </div>
                     </div>
-            
-                    <!-- Chat Window -->
-                    <div id="chat-window" class="chat-window">
-                        <!-- Chat content will be dynamically loaded here -->
+                </div><!-- home left end here -->
+
+                <!-- home center start here -->
+                <div class="home-center">
+                    <!-- Payment Transaction Table -->
+                    <div id="payment-transaction-table" class="report-table" style="display: none;">
+                        <h3>Payment Transaction Report</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments %}
+                                <tr>
+                                    <td>{{ payment.user.username }}</td>
+                                    <td>{{ payment.transaction_date }}</td>
+                                    <td>R{{ payment.amount }}</td>
+                                    <td>{{ payment.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button onclick="generatePDF('payment-transaction')">Generate PDF</button>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Home Right Wrapper End -->
-    </div><!-- Home Right End -->
+                    
+                    <!-- User Activity Table -->
+                    <div id="user-activity-table" class="report-table" style="display: none;">
+                        <h3>User Activity Report</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Action</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Placeholder data -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Logged In</td>
+                                    <td>2023-01-01 10:00 AM</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Updated Profile</td>
+                                    <td>2023-01-02 11:30 AM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button onclick="generatePDF('user-activity')">Generate PDF</button>
+                    </div>
+                </div><!-- home center end -->
+
+                <!-- Home Right -->
+                <div class="home-right">               
+                </div>            
+                <!-- Home Right Wrapper End -->
+            </div><!-- Home Right End -->
+        </div><!-- home wrapper end -->
+    </div><!-- home section end -->
+
+    <!-- JavaScript for showing/hiding tables and PDF generation -->
+    <script src="{% static 'scripts/main.js' %}"></script>
     <script>
-        function generateReport(reportType) {
-            // Open a new window or tab to generate and download the PDF
-            window.open(`/generate-report/${reportType}/`, '_blank');
+        function toggleReport(reportType) {
+            var paymentTable = document.getElementById('payment-transaction-table');
+            var userActivityTable = document.getElementById('user-activity-table');
+
+            if (reportType === 'payment-transaction') {
+                paymentTable.style.display = 'block';
+                userActivityTable.style.display = 'none';
+            } else if (reportType === 'user-activity') {
+                paymentTable.style.display = 'none';
+                userActivityTable.style.display = 'block';
+            }
+        }
+
+        function generatePDF(reportType) {
+            // Placeholder alert, replace with actual PDF generation logic
+            alert('Generating PDF for ' + reportType);
+            // Example: Implement PDF generation using jsPDF or a backend service
         }
     </script>
-    <script src="{% static 'scripts/main.js' %}" ></script>
 </body>
 </html>

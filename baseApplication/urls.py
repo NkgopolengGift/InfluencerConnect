@@ -25,5 +25,7 @@ urlpatterns = [
 
     path('initiate_payment/', views.initiate_payment, name="initiate_payment"),
     path('verify_payment/', views.verify_payment, name='verify_payment'),
+
+    path('payment_report/', views.payment_report, name='payment_report'),
     
 ]

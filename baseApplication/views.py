@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
-from .models import UserTBL, Sponsor, Influencer, Platform, Payment, Chat
+from .models import User, Sponsor, Influencer, Platform, Payment, Chat
 from django.http import JsonResponse
 from django.urls import reverse
 
@@ -42,11 +42,11 @@ def signUp(request):
         password = request.POST.get('password')
         account_type = request.POST.get('type')
 
-        if UserTBL.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             messages.error(request, "User exists. Login")
             return render(request, 'signin.html')
 
-        new_user = UserTBL(
+        new_user = User(
             first_name=first_name,
             last_name=last_name,
             username=username,
@@ -71,11 +71,11 @@ def adminProfile(request):
         phone_number = request.POST.get('phoneNumber')
         password = request.POST.get('password')
 
-        if UserTBL.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             messages.error(request, "User exists. Login")
             return render(request, 'signin.html')
 
-        new_user = UserTBL(
+        new_user = User(
             first_name=first_name,
             last_name=last_name,
             username=username,
@@ -98,13 +98,13 @@ def sponsorPlatform(request):
         username = request.POST.get('username')
 
         try:
-            user = UserTBL.objects.get(username=username)
-        except UserTBL.DoesNotExist:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
             messages.error(request, "User does not exist.")
             return redirect('signup')
 
         new_sponsor = Sponsor(
-            user_id=user,
+            user=user,
             content_category=content_category,
             website=website,
         )
@@ -124,19 +124,19 @@ def influencerPlatform(request):
         username = request.POST.get('username')
 
         try:
-            user = UserTBL.objects.get(username=username)
-        except UserTBL.DoesNotExist:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
             messages.error(request, "User does not exist.")
             return redirect('signup')
 
         new_influencer = Influencer(
-            user_id=user,
+            user=user,
             content_category=content_category,
         )
         new_influencer.save()
    
         new_platform = Platform(
-            influencer_id=new_influencer,
+            influencer_id=new_influencer.pk,
             platform_name=platform_name,
             platform_url=platform_url,
         )
@@ -184,7 +184,7 @@ def sponser(request):
 @login_required(login_url='index')
 def home(request):
   
-    platforms = Platform.objects.select_related('influencer_id__user_id').all()
+    platforms = Platform.objects.select_related('influencer__user').all()
     youtube_data = []
 
     for platform in platforms:
@@ -196,7 +196,7 @@ def home(request):
             if channel_data:
                 # Store channel data along with influencer username
                 youtube_data.append({
-                    'influencer_username': platform.influencer_id.user_id.username,
+                    'influencer_username': platform.influencer.user.username,
                     'channel_data': channel_data
                 })
               
@@ -241,12 +241,12 @@ def update_profile(request):
     # Fetch user's related data based on account_type
     if user.account_type == 'SPONSOR':
         try:
-            sponsor = Sponsor.objects.get(user_id=user)
+            sponsor = Sponsor.objects.get(user=user)
         except Sponsor.DoesNotExist:
             sponsor = None
     elif user.account_type == 'INFLUENCER':
         try:
-            influencer = Influencer.objects.get(user_id=user)
+            influencer = Influencer.objects.get(user=user)
             platforms = Platform.objects.filter(influencer_id=influencer)
         except Influencer.DoesNotExist:
             influencer = None
@@ -260,10 +260,10 @@ def update_profile(request):
         phone_number = request.POST.get('phone_number')
 
         # Check if username or email already exist for other users
-        if UserTBL.objects.exclude(pk=user.pk).filter(username=username).exists():
+        if User.objects.exclude(pk=user.pk).filter(username=username).exists():
             messages.error(request, 'Username is already taken. Please choose a different one.')
             return redirect('update_profile')
-        if UserTBL.objects.exclude(pk=user.pk).filter(email=email).exists():
+        if User.objects.exclude(pk=user.pk).filter(email=email).exists():
             messages.error(request, 'Email is already taken. Please choose a different one.')
             return redirect('update_profile')
 
@@ -279,7 +279,7 @@ def update_profile(request):
             website_url = request.POST.get('website_url')
 
             # Check if the new website URL already exists for other sponsors
-            if Sponsor.objects.exclude(user_id=user).filter(website=website_url).exists():
+            if Sponsor.objects.exclude(user=user).filter(website=website_url).exists():
                 messages.error(request, 'Website URL is already used by another sponsor.')
                 return redirect('update_profile')
 
@@ -330,17 +330,17 @@ def delete_account(request):
         
         if user.account_type == 'SPONSOR':
            try:
-                sponsor_data = Sponsor.objects.filter(user_id=user)
+                sponsor_data = Sponsor.objects.filter(user=user)
                 sponsor_data.delete()
            except Sponsor.DoesNotExist:
                 pass 
            
         elif user.account_type == 'INFLUENCER':
             try:
-                platforms = Platform.objects.filter(influencer_id__user_id=user)
+                platforms = Platform.objects.filter(influencer_id__user=user)
                 platforms.delete()
                 
-                influencer = Influencer.objects.get(user_id=user)
+                influencer = Influencer.objects.get(user=user)
                 influencer.delete()
             except Sponsor.DoesNotExist:
                 pass 
@@ -444,42 +444,18 @@ def get_youtube_channel_data(channel_url):
 
 #############-Initializing payment-##################
 def initiate_payment(request):
-    if request.method == 'POST':
-
-        email = request.POST.get('email')
-        amount = request.POST.get('amount')
-        
-        reference = generate_reference() 
-        print(reference)
-        headers = {
-            'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
-            'Content-Type': 'application/json',
-        }
-        data = {
-            "email": email,
-            "amount": int(amount) * 100,
-            "reference": reference,
-            "callback_url": request.build_absolute_uri(reverse('verify_payment')),
-        }
-        response = requests.post('https://api.paystack.co/transaction/initialize', headers=headers, json=data)
-        response_data = response.json()
-
-        if response_data.get('status') == True:
-            auth_url = response_data['data']['authorization_url']
-            return JsonResponse({'auth_url': auth_url})
-        else:
-            messages.error(request, 'Payment initialization failed')
-            return JsonResponse({'error': 'Payment initialization failed'})
-    else:
-        email = request.user.email  
-        return render(request, 'payment_form.html', {'email': email})
+    context = {
+        'PAYSTACK_PUBLIC_KEY': settings.PAYSTACK_PUBLIC_KEY,
+        'email': request.user.email  # Assuming user is authenticated and has an email
+    }
+    return render(request, 'payment_form.html',context)
 
 #############-Verify payment-##################
 #@login_required(login_url='signin')
 def verify_payment(request):
      
     reference = request.GET.get('reference')
-    
+    print(reference)
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
@@ -518,3 +494,11 @@ def check_payment_status(user):
             return False
     except Payment.DoesNotExist:
         return False
+    
+#############-Generate payment report-##################
+def payment_report(request):
+    payments = Payment.objects.all()
+    context = {
+        'payments': payments
+    }
+    return render(request, 'admin_home.html', context)

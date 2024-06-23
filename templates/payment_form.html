@@ -37,14 +37,14 @@
             <iframe id="paystackFrame" src="" style="width:100%; height:600px;"></iframe>
         </div>
         <h1 class="form-title">You are about to pay your monthly subscription</h1>
-        <form id="paymentForm" method="POST" action="{% url 'initiate_payment' %}">
+        <form id="paymentForm" onsubmit="payWithPaystack(event)">
             {% csrf_token %}
             <div class="main-user-info">
                 <div class="user-input-box">
                     <label for="amount">Amount: R100</label>
                     <input type="hidden" id="amount" name="amount" value="100">
                 </div>
-                <input type="hidden" id="email" name="email" value="{{email}}" >
+                <input type="hidden" id="email" name="email" value="influencerConnect@gmail.com">
             </div>
             <div class="form-submit-btn">
                 <input type="submit" value="Pay">
@@ -52,48 +52,30 @@
         </form>
     </div>
     <script>
-        $('#paymentForm').on('submit', function(event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
-
-            $.post($(this).attr('action'), formData, function(data) {
-                if (data.auth_url) {
-                    $('#paystackFrame').attr('src', data.auth_url);
-                    $('#paystackPopup').show();
-                } else {
-                    alert('Payment initialization failed');
-                }
-            });
-        });
-
-        // Assuming Paystack redirects to the verify_payment view after payment
-        window.addEventListener('message', function(event) {
-            if (event.origin === "https://checkout.paystack.com") {
-                if (event.data === "success") {
-                    $('#paystackPopup').hide();
-                    alert('Payment Successful');
-                    window.location.href = "{% url 'verify_payment' %}";
-                }
+        
+            function payWithPaystack(e){
+                e.preventDefault();
+        
+                let handler = PaystackPop.setup({
+                    key: "{{ PAYSTACK_PUBLIC_KEY }}", 
+                    email: document.getElementById("email").value,
+                    amount: document.getElementById("amount").value * 100,
+                    currency: "ZAR",  
+                    ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+                    onClose: function(){
+                        alert('Window closed.');
+                    },
+                    callback: function(response){
+                        let message = 'Payment complete! Reference: ' + response.reference;
+                        alert(message);
+                        window.location.href = "{% url 'verify_payment' %}?reference=" + response.reference;
+                    }
+                });
+        
+                handler.openIframe();
             }
-        });
     </script>
 
-    <!--Bootstrap JS start-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-    crossorigin="anonymous">        
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 
-    crossorigin="anonymous">
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" 
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 
-    crossorigin="anonymous">
-    </script>
-    <!--Bootstrap JS end-->
 </body>
 </html>
 

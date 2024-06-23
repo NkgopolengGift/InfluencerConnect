@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'channels',
 ]
 #For Login
-AUTH_USER_MODEL = 'baseApplication.UserTBL'
+AUTH_USER_MODEL = 'baseApplication.User'
 
 # CHANNEL_LAYERS = {
 #     'default': {
