@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import secrets
 
 #################-USERSTBL-###################
 
@@ -32,7 +33,7 @@ class UserTBL(AbstractBaseUser):
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     username = models.CharField(max_length=70, unique=True)
-    email = models.EmailField(max_length=70)
+    email = models.EmailField(max_length=70, unique=True)
     phone_number = models.CharField(max_length=30)
     account_type = models.CharField(max_length=15)
     last_login = models.DateTimeField(null=True, blank=True)
@@ -112,11 +113,22 @@ class Chat(models.Model):
 
 class Payment(models.Model):
     payment_id = models.AutoField(primary_key=True)
-    influencer_id = models.ForeignKey(Influencer, on_delete=models.CASCADE)
-    sponser_id = models.ForeignKey(Sponsor, on_delete=models.CASCADE)
-    card_details = models.CharField(max_length=150, null=False)
-    amount = models.CharField(max_length=8, null=False)
-    billing_date = models.DateTimeField(null=True, blank=True)
+    user = models.ForeignKey(UserTBL, on_delete=models.CASCADE)
+    reference = models.CharField(max_length=150, unique=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    verified = models.BooleanField(default=False)
+    transaction_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id.username
+        return f"Payment: {self.amount}"
+    
+    def save(self, *args, **kwargs):
+        while not self.reference:
+            reference = secrets.token_urlsafe(50)
+            object_with_similar_reference = Payment.objects.filter(reference=reference)    
+            if not object_with_similar_reference:
+                self.reference = reference
+        super().save(*args, **kwargs)
+    
+    def amount_value(self):
+        return self.amount*100

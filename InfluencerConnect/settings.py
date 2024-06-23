@@ -13,6 +13,8 @@ YOUTUBE_API_KEY = config('YOUTUBE_API_KEY')
 CHAT_ENGINE_PROJECT_ID = config('CHAT_ENGINE_PROJECT_ID')
 CHAT_ENGINE_PRIVATE_KEY = config('CHAT_ENGINE_PRIVATE_KEY')
 
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 
 ALLOWED_HOSTS = [
     '*'
@@ -35,14 +37,17 @@ INSTALLED_APPS = [
 #For Login
 AUTH_USER_MODEL = 'baseApplication.UserTBL'
 
-# For chatting 
-ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             'hosts': [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
-        },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
 
@@ -77,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'InfluencerConnect.wsgi.application'
+ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
 
 
 # Database

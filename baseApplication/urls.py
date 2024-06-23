@@ -15,10 +15,15 @@ urlpatterns = [
 
     path('home/', views.home, name='home'),
     path('admin_home/', views.admin_home, name='admin_home'),
+    path('chat/', views.chat, name='chat'),
     #path('summary/', views.summary_report, name='summary'),
     #path('csv_report', views.export_csv, name='csv_report'),
 
     path('profile/', views.profile, name='profile'),
+    path('update_profile/', views.update_profile, name='update_profile'),
     path('delete_account/', views.delete_account, name="delete_account"),
+
+    path('initiate_payment/', views.initiate_payment, name="initiate_payment"),
+    path('verify_payment/', views.verify_payment, name='verify_payment'),
     
 ]

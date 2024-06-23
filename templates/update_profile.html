@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/update_profile.css' %}">
+    <title>Update Profile</title>
+    <!-- Font Awesome Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-wrapper">
+                <div class="logoBox">
+                    <h3>InfluencerConnect</h3>
+                </div>
+                <div class="iconBox2">
+                    <a href="{% url 'home' %}"><i class="fa-solid fa-house">Home</i></a>
+                    <a href="{% url 'chat' %}"><i class="fas fa-comment">Chat</i></a>
+                    <a href="{% url 'signout' %}"><i class="fas fa-sign-out-alt">Log out</i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="update-profile">
+        <div class="update-profile-container">
+                    <!--Flash messages start-->
+        {% if messages %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+             </div>
+         {% endif %}
+        <!--Flash messages end-->
+            <h2>Update Your Profile</h2>
+            <form method="POST" action="{% url 'update_profile' %}">
+                {% csrf_token %}
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+
+                <label for="phone_number">Phone number</label>
+                <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+
+                {% if user.account_type == 'INFLUENCER' %}
+                    <h2>Platforms</h2>
+                    <div id="platforms-container">
+                        {% for platform in platforms %}
+                            <div class="platform-item">
+                                <label>{{ platform.platform_name }}</label>
+                                <input type="text" name="platform_{{ platform.pk }}" value="{{ platform.platform_url }}">
+                                
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" id="add-platform">Add another platform</button>
+                {% endif %}
+
+                {% if user.account_type == 'SPONSOR' %}
+                    <h2>Sponsor Website</h2>
+                    <label for="website_url">Website URL</label>
+                    <input type="text" id="website_url" name="website_url" value="{{ sponsor.website }}" required="">
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <button type="submit">Save Changes</button>
+                    
+                    <a href="{% url 'home' %}" class="cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('add-platform').addEventListener('click', function () {
+            const platformsContainer = document.getElementById('platforms-container');
+            const platformCount = platformsContainer.childElementCount;
+            const platformItem = document.createElement('div');
+            platformItem.className = 'platform-item';
+            platformItem.innerHTML = `
+                <label>Platform Name</label>
+                <input type="text" name="new_platform_name_${platformCount}" placeholder="Platform Name" required>
+                <label>Platform URL</label>
+                <input type="text" name="new_platform_url_${platformCount}" placeholder="Platform URL" required>
+                <button type="button" class="remove-platform">Remove</button>
+            `;
+            platformsContainer.appendChild(platformItem);
+
+            platformItem.querySelector('.remove-platform').addEventListener('click', function () {
+                platformItem.remove();
+            });
+        });
+
+        document.querySelectorAll('.remove-platform').forEach(button => {
+            button.addEventListener('click', function () {
+                button.parentElement.remove();
+            });
+        });
+    </script>
+    
+</body>
+</html>
