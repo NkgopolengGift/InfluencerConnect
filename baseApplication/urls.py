@@ -27,5 +27,5 @@ urlpatterns = [
     path('verify_payment/', views.verify_payment, name='verify_payment'),
 
     path('payment_report/', views.payment_report, name='payment_report'),
-    
+    path('chat/<str:room_name>/', views.chat_room, name='chat_room'),
 ]

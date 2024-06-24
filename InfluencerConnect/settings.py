@@ -23,6 +23,8 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,7 +34,7 @@ INSTALLED_APPS = [
 
     'baseApplication.apps.BaseapplicationConfig',
     'rest_framework',
-    'channels',
+    
 ]
 #For Login
 AUTH_USER_MODEL = 'baseApplication.User'

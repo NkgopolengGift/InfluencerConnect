@@ -157,13 +157,13 @@ def signIn(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, 'You have logged in successfully.')
 
                 if user.is_admin:
                     return redirect('admin_home')
                 else:
                     if not check_payment_status(user):
                         return redirect('initiate_payment')
+                    #messages.success(request, 'You have logged in successfully.')
                     return redirect('home')
             else:
                 messages.error(request, 'Invalid credentials, try again.')
@@ -477,12 +477,6 @@ def verify_payment(request):
     else:
         messages.error(request, 'Payment verification failed')
         return redirect('initiate_payment')
-#############-Gererate Reference-##################
-def generate_reference():
-    now = datetime.now()
-    timestamp = now.strftime("%Y%m%d%H%M%S")
-    random_chars = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    return f"{timestamp}{random_chars}"
 
 #############-Check payment status-##################
 def check_payment_status(user):
@@ -502,3 +496,12 @@ def payment_report(request):
         'payments': payments
     }
     return render(request, 'admin_home.html', context)
+
+
+
+
+def chat_room(request, room_name):
+    return render(request, 'chat.html', {
+        'room_name': room_name
+    })
+

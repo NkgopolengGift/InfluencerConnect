@@ -19,6 +19,22 @@
 </head>
 <body>
 
+    <!-- header section end -->
+         <!--Flash messages start-->
+         {% if messages %}
+         <div class="container">
+             <div class="row">
+                 <div class="col-md-6 offset-md-3">
+                     {% for message in messages %}
+                         <div class="alert alert-{{ message.tags }}">
+                             {{ message }}
+                         </div>
+                     {% endfor %}
+                 </div>
+             </div>
+              </div>
+          {% endif %}
+         <!--Flash messages end-->
     <!-- header section start -->
     <header>
         <div class="header-container">
@@ -39,7 +55,7 @@
             </div>
         </div>
     </header>
-<!-- header section end -->
+
 <!-- home section start -->
 <div class="home">
     <div class="container">

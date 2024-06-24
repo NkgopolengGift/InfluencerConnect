@@ -104,12 +104,12 @@
                 <button type="button" class="remove-platform">Remove</button>
             `;
             platformsContainer.appendChild(platformItem);
-
+    
             platformItem.querySelector('.remove-platform').addEventListener('click', function () {
                 platformItem.remove();
             });
         });
-
+    
         document.querySelectorAll('.remove-platform').forEach(button => {
             button.addEventListener('click', function () {
                 button.parentElement.remove();
