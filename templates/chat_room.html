@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body {
+            background-color: #3a78ffec;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        #messages {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        strong {
+            color: #fff;
+        }
+        em {
+            color: #ccc;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        textarea {
+            width: 100%;
+            max-width: 600px;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            resize: none;
+        }
+        button {
+            background-color: white;
+            color: #3a78ffec;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <h2>Chat between {{ room.influencer.user_id.username }} and {{ room.sponsor.user_id.username }}</h2>
+
+    {% if room.accepted %}
+        <div id="messages">
+            {% for message in room.messages.all %}
+                <p><strong>{{ message.sender.username }}:</strong> {{ message.content }} <em>({{ message.timestamp }})</em></p>
+            {% endfor %}
+        </div>
+
+        <form id="sendMessageForm" method="post" action="{% url 'send_message' %}">
+            {% csrf_token %}
+            <input type="hidden" name="room_id" value="{{ room.id }}">
+            <textarea name="content" placeholder="Type your message..."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    {% else %}
+        <p>This room has not been accepted yet.</p>
+        {% if request.user == room.influencer.user_id %}
+            <form method="post" action="">
+                {% csrf_token %}
+                <button type="submit" name="accept">Accept Request</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    {% if room.accepted %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#sendMessageForm').on('submit', function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                    success: function(data) {
+                        // Handle success response from backend
+                        console.log(data);
+                        // Optionally, update UI with new message
+                        $('#messages').append('<p><strong>' + data.sender + ':</strong> ' + data.message + ' <em>(' + data.timestamp + ')</em></p>');
+                    },
+                    error: function(xhr, errmsg, err) {
+                        // Handle errors
+                        console.error(xhr.status + ": " + xhr.responseText);
+                    }
+                });
+            });
+        });
+        </script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Rooms</title>
+    <style>
+        body {
+            background-color: #3a78ffec;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        li:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Chat Rooms</h1>
+        <ul>
+            {% if influencer_rooms %}
+                {% for room in influencer_rooms %}
+                    <li>
+                        <a href="{% url 'chat_room' room.id %}">Room with {{ room.sponsor.user_id.username }}</a>
+                        <br>(Created at: {{ room.created_at }})
+                    </li>
+                {% endfor %}
+            {% elif sponsor_rooms %}
+                {% for room in sponsor_rooms %}
+                    <li>
+                        <a href="{% url 'chat_room' room.id %}">Room with {{ room.influencer.user_id.username }}</a>
+                        <br>(Created at: {{ room.created_at }})
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No rooms available.</li>
+            {% endif %}
+        </ul>
+    </div>
+</body>
+</html>

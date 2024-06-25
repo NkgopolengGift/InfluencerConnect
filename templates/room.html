@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <title>Chat Room page</title>
+
+
+    <!--==========Font Awesome Link===========-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <!--==========chat.js===========-->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- header section start -->
+    <header>
+        <div class="header-container">
+            <div class="header-wrapper">
+                <div class="logoBox">
+                    <h3>InfluencerConnect</h3>
+                </div>
+                <div class="searchBox">
+                    <input type="search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="iconBox2">
+                    <a href=""><i class="fa-solid fa-house">Home</i></a>
+                    <a href="{% url "profile" %}"><i class="fas fa-user">Profile</i></a>
+                    <a href="{% url "signout" %}"><i class="fas fa-sign-out-alt">Log out</i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="home-center">
+        <div class="home-center-wrapper">
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <title>Chat Rooms page</title>
+
+
+    <!--==========Font Awesome Link===========-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <!--==========chat.js===========-->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- header section start -->
+    <header>
+        <div class="header-container">
+            <div class="header-wrapper">
+                <div class="logoBox">
+                    <h3>InfluencerConnect</h3>
+                </div>
+                <div class="searchBox">
+                    <input type="search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="iconBox2">
+                    <a href=""><i class="fa-solid fa-house">Home</i></a>
+                    <a href="{% url "profile" %}"><i class="fas fa-user">Profile</i></a>
+                    <a href="{% url "signout" %}"><i class="fas fa-sign-out-alt">Log out</i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="home-center">
+        <div class="home-center-wrapper">
+            <!-- room.html -->
+
+            <h2>Chat with {{ room.influencer.username }}</h2>
+
+            <div id="chat-messages">
+                {% for message in room.messages.all %}
+                    <p><strong>{{ message.sender.username }}:</strong> {{ message.message }}</p>
+                {% endfor %}
+            </div>
+
+            <form method="post" action="{% url 'send_message' room.id %}">
+                {% csrf_token %}
+                <textarea name="message" required></textarea><br>
+                <input type="submit" value="Send Message">
+            </form>
+        </div>
+    </div>
+           
+</body>
+</html>
+
+        </div>
+    </div>
+           
+</body>
+</html>

@@ -9,15 +9,16 @@ urlpatterns = [
     path('signin/', views.signIn, name='signin'),
     path('signout/', views.signOut, name='signout'),
     path('admin_profile/',views.adminProfile, name='admin_profile'),
+    path('resert_password/',views.resertPassword, name='resert_password'),
+    
+    path('new_password/',views.newPassword, name='new_password'),
+    path('resert_done/',views.resertDone, name='resert_done'),
 
     path('sponser/', views.sponsorPlatform, name='sponser'),
     path('influencer/', views.influencerPlatform, name='influencer'),
 
     path('home/', views.home, name='home'),
     path('admin_home/', views.admin_home, name='admin_home'),
-    path('chat/', views.chat, name='chat'),
-    #path('summary/', views.summary_report, name='summary'),
-    #path('csv_report', views.export_csv, name='csv_report'),
 
     path('profile/', views.profile, name='profile'),
     path('update_profile/', views.update_profile, name='update_profile'),
@@ -27,5 +28,11 @@ urlpatterns = [
     path('verify_payment/', views.verify_payment, name='verify_payment'),
 
     path('payment_report/', views.payment_report, name='payment_report'),
-    path('chat/<str:room_name>/', views.chat_room, name='chat_room'),
+
+    path('chat/', views.chat, name='chat'),
+    path('create_room/', views.create_room, name='create_room'),
+    path('send_message/', views.send_message, name='send_message'),
+    path('fetch-messages/', views.fetch_messages, name='fetch_messages'),
+    path('my-view/', views.my_view, name='my_view'),
+
 ]

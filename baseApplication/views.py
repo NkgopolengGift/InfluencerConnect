@@ -1,13 +1,18 @@
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
-from .models import User, Sponsor, Influencer, Platform, Payment, Chat
+from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
+
+from .models import *
+from .forms import ChatMessagesCreateform
 from django.http import JsonResponse
 from django.urls import reverse
+import json
 
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -23,6 +28,7 @@ from decouple import config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 #############-For YouTube API-##################
+from django.views.decorators.http import require_POST
 
 
 import random
@@ -44,8 +50,10 @@ def signUp(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "User exists. Login")
-            return render(request, 'signin.html')
-
+            return render(request, '404.html')
+        elif  User.objects.filter(email=email).exists():
+            messages.error(request, "Email exists.")
+            return render(request, '404.html')
         new_user = User(
             first_name=first_name,
             last_name=last_name,
@@ -60,7 +68,25 @@ def signUp(request):
         context = {'username': username, 'account_type': account_type}
         return render(request, 'platform.html', context)
     return render(request, 'signup.html')
-
+####################################################
+def resertPassword(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+                token = 'generate_your_token_here'
+                user.password_reset_token = token
+                user.save()
+                return render(request, 'email_error_page.html')
+        else:
+            return render(request, 'email_error_page.html')
+    return render(request,'resert_password.html')
+####################################################
+def newPassword(request):
+    return render(request,'new_password.html')
+####################################################
+def resertDone(request):
+    return render(request,'resert_done.html')
 #############-Create Admin Profile-##################
 def adminProfile(request):
     if request.method == 'POST':
@@ -189,15 +215,19 @@ def home(request):
 
     for platform in platforms:
         if platform.platform_name == 'YouTube':
+            influencer_id = platform.influencer.user.user_id
             channel_url = platform.platform_url
             # Get YouTube channel data
             channel_data = get_youtube_channel_data(channel_url)
+            logged_in_user_id = request.user.user_id
 
             if channel_data:
-                # Store channel data along with influencer username
+                
                 youtube_data.append({
+                    'influencer_id': influencer_id,
                     'influencer_username': platform.influencer.user.username,
-                    'channel_data': channel_data
+                    'channel_data': channel_data,
+                    'logged_in_user_id': logged_in_user_id
                 })
               
     context = {
@@ -319,10 +349,6 @@ def update_profile(request):
         }
         return render(request, 'update_profile.html', context)
 
-#############-Charting-##################
-@login_required(login_url='index')
-def chat(request):
-    return  render(request, 'chat.html')
 #############-Delete account-##################
 def delete_account(request):
     if request.method == 'GET':
@@ -505,3 +531,128 @@ def chat_room(request, room_name):
         'room_name': room_name
     })
 
+#############-messaging view-##################
+@login_required
+def create_room(request):
+    if request.method == 'POST':
+        influencer_id = request.POST.get('influencer_id')
+        sponsor_id = request.POST.get('sponsor_id')
+
+        influencer = Influencer.objects.get(user=influencer_id)
+        influencer_pk = influencer.pk
+    
+        sponsor = Sponsor.objects.get(user=sponsor_id)
+        sponsor_pk = sponsor.pk
+        
+        room = Room.objects.filter(influencer=influencer_pk, sponsor=sponsor_pk).first()
+        if room:
+           
+            return redirect('chat')
+        else:
+            room = Room.objects.create(influencer=influencer, sponsor=sponsor)
+            return redirect('chat')
+        
+
+    else:
+        return render(request, 'messages.html')
+
+    
+####################################################
+@login_required
+@require_POST
+def accept_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    if request.user != room.influencer.user_id:
+        return JsonResponse({'error': 'You are not authorized to accept this room.'}, status=403)
+    room.accepted = True
+    room.save()
+    return JsonResponse({'success': True})
+
+@login_required
+@require_POST
+def send_message(request):
+    if request.method == 'POST':
+        room_id = request.POST.get('room_id')
+        content = request.POST.get('content')
+        room = Room.objects.get(room_id=room_id)
+        message = Message.objects.create(
+            room=room,
+            user=request.user,
+            content=content
+        )
+        return JsonResponse({'status': 'success', 'message': 'Message sent successfully'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+@login_required
+def get_messages(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    if request.user != room.influencer.user_id and request.user != room.sponsor.user_id:
+        return JsonResponse({'error': 'You are not authorized to view messages in this room.'}, status=403)
+    messages = room.messages.order_by('timestamp').values('sender__username', 'content', 'timestamp')
+    return JsonResponse(list(messages), safe=False)
+
+@login_required
+def chat_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    if request.user != room.influencer.user_id and request.user != room.sponsor.user_id:
+        return redirect('home')
+
+    if request.method == 'POST' and 'accept' in request.POST:
+        if request.user == room.influencer.user_id:
+            room.accepted = True
+            room.save()
+            messages.success(request, 'Room accepted. You can now start chatting.')
+        else:
+            messages.error(request, 'You are not authorized to accept this room.')
+
+    return render(request, 'chat_room.html', {'room': room})
+
+@login_required
+def chat_rooms(request):
+    user = request.user
+
+    # Fetch rooms where the user is either a sponsor or an influencer
+    influencer_rooms = Room.objects.filter(influencer__user_id=user)
+    sponsor_rooms = Room.objects.filter(sponsor__user_id=user)
+    
+    context = {
+        'influencer_rooms': influencer_rooms,
+        'sponsor_rooms': sponsor_rooms,
+    }
+    return render(request, 'chat_rooms.html', context)
+##############################################################
+def my_view(request):
+    return render(request, '404.html')
+###############################################################
+def chat(request):
+    user = request.user
+    if user.account_type == "INFLUENCER":
+        rooms = Room.objects.filter(influencer__user=user)
+    else:
+        rooms = Room.objects.filter(sponsor__user=user)
+    
+    room_messages = {}
+    for room in rooms:
+        messages = Message.objects.filter(room=room).order_by('timestamp')
+        room_messages[room] = messages
+    
+    context = {
+        'rooms': rooms,
+        'room_messages': room_messages,
+    }
+    return render(request, 'messages.html', context)
+#####################################################
+def fetch_messages(request):
+    room_id = request.GET.get('room_id')
+    room = get_object_or_404(Room, pk=room_id)
+    messages = Message.objects.filter(room=room).order_by('timestamp')
+
+    message_data = []
+    for message in messages:
+        message_data.append({
+            'content': message.content,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'user': message.user.username 
+        })
+
+    return JsonResponse(message_data, safe=False)

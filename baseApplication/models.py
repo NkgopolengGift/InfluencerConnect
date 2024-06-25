@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager , User
 import secrets
+import shortuuid
 
 #################-USERSTBL-###################
 
@@ -72,7 +73,16 @@ class Influencer(models.Model):
     content_category = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username if self.user else 'No User Associated' 
+
+#################-Admin-###################
+
+class Admin(models.Model):
+    admin_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username if self.user else 'No User Associated' 
 
 #################-SPONSORTBL-###################
 
@@ -83,7 +93,7 @@ class Sponsor(models.Model):
     website = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username if self.user else 'No User Associated' 
 
 #################-PLATFORMTBL-###################
 
@@ -102,15 +112,27 @@ class Platform(models.Model):
         return self.platform_name
     
 #################-Chat-###################
-class Chat(models.Model):
-    chat_id = models.AutoField(primary_key=True)
-    influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE)
-    sponser = models.ForeignKey(Sponsor, on_delete=models.CASCADE)
-    content = models.TextField()
-    time = models.DateTimeField(auto_now_add=True)
-
+class Room(models.Model):
+    room_id = models.AutoField(primary_key=True)
+    influencer = models.ForeignKey(Influencer, related_name='influencer_rooms', null=True, blank=True, on_delete=models.CASCADE)
+    sponsor = models.ForeignKey(Sponsor, related_name='sponsor_rooms', null=True, blank=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=True)
+    
     def __str__(self):
-        return f"Chat between {self.influencer.user.username} and {self.sponsor.user.username} at {self.time}"
+        influencer_username = self.influencer.user.username if self.influencer and self.influencer.user else 'No Influencer'
+        sponsor_username = self.sponsor.user.username if self.sponsor and self.sponsor.user else 'No Sponsor'
+        return f"Room between {influencer_username} and {sponsor_username}"
+    
+class Message(models.Model):
+    chat_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, related_name='messages',null=True,blank=True, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, related_name='messages',null=True,blank=True, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Message from {self.user.username} in {self.room}"
 
 #################-Payment-###################
 
@@ -135,3 +157,4 @@ class Payment(models.Model):
     
     def amount_value(self):
         return self.amount*100
+    

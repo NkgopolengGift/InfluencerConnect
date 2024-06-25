@@ -1,0 +1,50 @@
+<!-- chat_room.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+</head>
+<body>
+    <h2>Chat Room</h2>
+<div id="messages"></div>
+<textarea id="message-input"></textarea>
+<button id="send-message-btn">Send</button>
+
+<script>
+  const roomId = {{ room.id }};
+  const fetchMessages = () => {
+    fetch(`/get_messages/${roomId}/`)
+      .then(response => response.json())
+      .then(messages => {
+        const messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = '';
+        messages.forEach(message => {
+          messagesDiv.innerHTML += `<p><strong>${message.sender__username}:</strong> ${message.content} <em>${message.timestamp}</em></p>`;
+        });
+      });
+  };
+
+  document.getElementById('send-message-btn').addEventListener('click', () => {
+    const content = document.getElementById('message-input').value;
+    fetch("{% url 'send_message' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ room_id: roomId, content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        fetchMessages();
+      }
+    });
+  });
+
+  setInterval(fetchMessages, 3000); // Poll every 3 seconds
+  fetchMessages(); // Initial fetch
+</script>
+</body>
+</html>
