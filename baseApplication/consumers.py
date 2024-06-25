@@ -1,5 +1,3 @@
-# baseApplication/consumers.py
-
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -23,6 +21,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    # Receive message from WebSocket
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
@@ -36,6 +35,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
 

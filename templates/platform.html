@@ -36,23 +36,40 @@
         
         {% if account_type == 'INFLUENCER' %}
         <h1 class="form-title">Select Content category below</h1>
-        <form method="post" action="/influencer/" >
+        <form method="post" action="/influencer/" name="influencerForm" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="main-user-info">
                 
                 <!--Details that goes into platform table-->
                 <div class="user-input-box">
-                    <label for="platform_name">Platform name</label>
-                    <select class="form-select" id="type" name="platform_name" required>
-                        <option value="YouTube" default>YouTube</option>
-                        <option value="TikTok" >TikTok</option>
-                        <option value="Facebook" >Facebook</option>
-                    </select>
+                    
+                    <label for="youtube_url" disabled="">YouTube URL:</label>
+
                 </div>
+                <div class="user-input-box"  >
+                    <input type="text" name="youtube_url" placeholder="Enter your YouTube channel URL">
+                </div>
+
                 <div class="user-input-box">
-                    <label for="website">Platform url</label>
-                    <input type="text" id="fullName" name="platform_url" placeholder="Enter your first website domain" required>
+                    
+                    <label for="instagram_url" disabled="">Instagram URL:</label>
+
                 </div>
+                <div class="user-input-box" >
+                    <input type="text"  name="instagram_url" placeholder="Enter your Instagram username">
+                    <input type="text"  name="instagram_password" placeholder="Enter your Instagram Password">
+
+                </div>
+                
+                <div class="user-input-box">
+                  
+                    <label for="facebook_url" disabled="">Facebook URL:</label>
+
+                </div>
+                <div class="user-input-box" >
+                    <input type="text"  name="facebook_url" placeholder="Enter your Facebook username">
+                </div>
+                
 
                 <!--Details that goes into influencer table-->
                 <input type="hidden" id="username" name="username" value="{{ username }}" >
@@ -127,6 +144,19 @@
     crossorigin="anonymous">
     </script>
     <!--Bootstrap JS end-->
+    <script>
+        function validateForm() {
+            var youtubeUrl = document.forms["influencerForm"]["youtube_url"].value;
+            var instagramUrl = document.forms["influencerForm"]["instagram_url"].value;
+            var facebookUrl = document.forms["influencerForm"]["facebook_url"].value;
+
+            if (youtubeUrl === "" && instagramUrl === "" && facebookUrl === "") {
+                alert("Please fill in at least one platform URL.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
 

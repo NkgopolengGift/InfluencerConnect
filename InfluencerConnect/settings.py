@@ -1,7 +1,6 @@
 from pathlib import Path
 from decouple import config
-
-
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,6 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 YOUTUBE_API_KEY = config('YOUTUBE_API_KEY')
+
+TIKTOK_CLIENT_SECRET = config('TIKTOK_CLIENT_SECRET')
+TIKTOK_CLIENT_KEY = config('TIKTOK_CLIENT_KEY')
 
 CHAT_ENGINE_PROJECT_ID = config('CHAT_ENGINE_PROJECT_ID')
 CHAT_ENGINE_PRIVATE_KEY = config('CHAT_ENGINE_PRIVATE_KEY')
@@ -90,26 +92,29 @@ ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'InfluencerConnectDB',
+#         'USER': 'postgres',
+#         'PASSWORD': config('DATABASE_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+#Database outside
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'InfluencerConnectDB',
-        'USER': 'postgres',
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
+        'NAME': 'influencerconnectdb_k4v5',
+        'USER': 'influencerconnectdb_k4v5_user',
+        'PASSWORD': 'vhDTlv5sAO4k0oATgDhIY6bf1sY3qo4Z',
+        'HOST': 'dpg-cpt2t0bv2p9s73b0jptg-a.oregon-postgres.render.com',
         'PORT': '5432',
     }
 }
-#DATABASES = {
- #   'default': {
-#      'ENGINE': 'django.db.backends.sqlite3',
-#     'NAME': BASE_DIR / 'db.sqlite3',
-   #}
-#}
+#Database inside
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -162,3 +167,4 @@ EMAIL_HOST_USER = 'fakelorrainebianca@gmail.com'
 EMAIL_HOST_PASSWORD = '@Lorraine2020'
 DEFAULT_FROM_EMAIL = 'fakelorrainebianca@gmail.com'
 
+CSRF_TRUSTED_ORIGINS=['https://5362-168-172-120-67.ngrok-free.app']

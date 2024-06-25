@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
+import instaloader
 from django.core.mail import send_mail, BadHeaderError
 
 from .models import *
@@ -144,29 +145,57 @@ def sponsorPlatform(request):
 #############-Influecer-##################
 def influencerPlatform(request):
     if request.method == 'POST':
-        platform_name = request.POST.get('platform_name')
-        platform_url = request.POST.get('platform_url')
+        youtube_url = request.POST.get('youtube_url')
+        instagram_url = request.POST.get('instagram_url')
+        instagram_password = request.POST.get('instagram_password')
+        facebook_url = request.POST.get('instagram_url')
         content_category = request.POST.get('content_category')
         username = request.POST.get('username')
 
+     
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             messages.error(request, "User does not exist.")
             return redirect('signup')
-
+        
         new_influencer = Influencer(
             user=user,
             content_category=content_category,
         )
         new_influencer.save()
-   
-        new_platform = Platform(
-            influencer_id=new_influencer.pk,
-            platform_name=platform_name,
-            platform_url=platform_url,
-        )
-        new_platform.save()
+
+        # Fetch and save Instagram data if URL and password are provided
+        if instagram_url and instagram_password:
+            instagram_data = fetch_instagram_data(instagram_url, instagram_password)
+            if instagram_data:
+                new_platform = Platform(
+                    influencer=new_influencer,
+                    platform_name='Instagram',
+                    platform_url=instagram_url,
+                    likes=instagram_data['likes'],
+                    views=instagram_data['views'],
+                    subscribers=instagram_data['subscribers'],
+                    comments=instagram_data['comments'],
+                    videos=instagram_data['videos']
+                )
+                new_platform.save()
+        
+        # Fetch and save YouTube data if URL is provided
+        if youtube_url:
+            channel_data = get_youtube_channel_data(youtube_url)
+            if channel_data:
+                new_platform = Platform(
+                    influencer=new_influencer,
+                    platform_name='YouTube',
+                    platform_url=youtube_url,
+                    likes=channel_data['likes'],
+                    views=channel_data['views'],
+                    subscribers=channel_data['subscribers'],
+                    comments=channel_data['comments'],
+                    videos=channel_data['videos']
+                )
+                new_platform.save()
 
         messages.success(request, "Your account is active. Login")
         return redirect('signin')
@@ -656,3 +685,32 @@ def fetch_messages(request):
         })
 
     return JsonResponse(message_data, safe=False)
+
+#Fetch instagram data 
+def fetch_instagram_data(instagram_url, instagram_password):
+    L = instaloader.Instaloader()
+    try:
+        username = instagram_url
+        L.login(username, instagram_password)
+        profile = instaloader.Profile.from_username(L.context, username)
+        
+        total_likes = sum(post.likes for post in profile.get_posts())
+        total_comments = sum(post.comments for post in profile.get_posts())
+        videos = profile.mediacount  # Number of posts/videos
+        
+        instagram_data = {
+            'likes': total_likes,
+            'views': profile.mediacount,  
+            'subscribers': profile.followers,
+            'comments': total_comments,
+            'videos': videos
+        }
+        print(total_likes)
+        print(profile.mediacount)
+        print(profile.followers)
+        print(total_comments)
+        
+        return instagram_data
+    except Exception as e:
+        print(f"Error fetching Instagram data: {e}")
+        return None
