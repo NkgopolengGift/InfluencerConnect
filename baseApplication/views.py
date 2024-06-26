@@ -241,6 +241,7 @@ def home(request):
   
     platforms = Platform.objects.select_related('influencer__user').all()
     youtube_data = []
+    instagram_data = []
 
     for platform in platforms:
         if platform.platform_name == 'YouTube':
@@ -251,17 +252,28 @@ def home(request):
             logged_in_user_id = request.user.user_id
 
             if channel_data:
-                
                 youtube_data.append({
                     'influencer_id': influencer_id,
                     'influencer_username': platform.influencer.user.username,
                     'channel_data': channel_data,
                     'logged_in_user_id': logged_in_user_id
                 })
-              
+        elif platform.platform_name == 'Instagram':
+            influencer_id = platform.influencer.user.user_id
+            instagram_data.append({
+                'influencer_id': influencer_id,
+                'influencer_username': platform.influencer.user.username,
+                'likes': platform.likes,
+                'views': platform.views,
+                'subscribers': platform.subscribers,
+                'comments': platform.comments,
+                'videos': platform.videos
+            })
+    
     context = {
         'username': request.user.username,
-        'youtube_data': youtube_data
+        'youtube_data': youtube_data,
+        'instagram_data': instagram_data
     }
     return render(request, 'home.html', context)
 
