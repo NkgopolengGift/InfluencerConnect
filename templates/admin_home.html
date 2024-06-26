@@ -62,7 +62,7 @@
                             <a onclick="toggleReport('payment-transaction')">Generate Payment Report</a>
                         </div>
                         <div>
-                            <a onclick="toggleReport('user-activity')">User Activity Reports</a>
+                            <a onclick="toggleReport('user-activity')">Content Performance Report</a>
                         </div>
                     </div>
                 </div><!-- home left end here -->
@@ -74,42 +74,21 @@
                         <h3>Payment Transaction Report</h3>
  
                         <div id="report-buttons" style="display: none;">
-                            <button><a href="{% url "generate_pdf_report" %}">Generate PDF Report</a></button>
-                            <button><a href="{% url "generate_word_report" %}">Generate Word Report</a></button>
-                            <!--<button><a href="{% url "generate_excel_report" %}">Generate Excel Report</a></button>-->
+                            <button><a href="{% url "generate_pdf_report" %}">Download PDF Report</a></button>
+                            <button><a href="{% url "generate_word_report" %}">Download Word Report</a></button>
+                            <button><a href="{% url "generate_excel_report" %}">Download Excel Report</a></button>
                         </div>
                     </div>
                     
                     <!-- User Activity Table -->
                     <div id="user-activity-table" class="report-table" style="display: none;">
                         <h3>User Activity Report</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Action</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Placeholder data -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>Logged In</td>
-                                    <td>2023-01-01 10:00 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Updated Profile</td>
-                                    <td>2023-01-02 11:30 AM</td>
-                                </tr>
-                            </tbody>
-                        </table>
                         <div id="report-buttons-user-activity" style="display: none;">
-                            <button onclick="generatePDF('user-activity')">Generate PDF</button>
-                            <button onclick="generateWord('user-activity')">Generate Word</button>
-                            <button onclick="generateExcel('user-activity')">Generate Excel</button>
+                            <button ><a href="{% url "generate_content_performance_report_pdf" %}">Download PDF</a></button>
+                            <button ><a href="{% url "generate_content_performance_report_excel" %}">Download Excell</a></button>
+                
                         </div>
+            
                     </div>
                 </div><!-- home center end -->
 

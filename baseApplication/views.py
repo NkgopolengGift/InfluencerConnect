@@ -119,8 +119,8 @@ def adminProfile(request):
             password=make_password(password), 
             is_admin=True
         )
-        
         new_user.save()
+        Admin.objects.create(user=new_user) 
         messages.success(request,'You have successfully created an account. Login')
         return render(request, 'signin.html')
     return render(request, 'admin_profile.html')
@@ -243,10 +243,27 @@ def home(request):
         if platform.platform_name == 'YouTube':
             channel_url = platform.platform_url
             youtube_data = fetch_youtube_channel_data(channel_url)
+
+            platform.likes = youtube_data.get('likes', 0)
+            platform.views = youtube_data.get('views', 0)
+            platform.subscribers = youtube_data.get('subscribers', 0)
+            platform.comments = youtube_data.get('comments', 0)
+            platform.videos = youtube_data.get('videos', 0)
+            platform.save()
+
             data[influencer_id]['youtube_data'] = youtube_data
+
+            #=====save to database==========
         elif platform.platform_name == 'Instagram':
             username = platform.platform_url.split('/')[-1]
             instagram_data = fetch_instagram_profile(username)
+
+            # Update the Platform instance with Instagram data
+            platform.likes = instagram_data.get('total_likes', 0)
+            platform.subscribers = instagram_data.get('followers', 0)
+            platform.videos = instagram_data.get('posts', 0)
+            platform.save()
+
             data[influencer_id]['instagram_data'] = instagram_data
 
     context = {
@@ -664,3 +681,76 @@ def fetch_messages(request):
         })
 
     return JsonResponse(message_data, safe=False)
+
+#########Content Performance Report############
+
+def generate_content_performance_report_excel(request):
+    # Define the filtering and ordering criteria
+    #min_subscribers = 1000
+    platforms = Platform.objects.filter().order_by('-likes')
+
+    # Prepare data for the report
+    data = []
+    for platform in platforms:
+        data.append({
+            'Platform Name': platform.platform_name,
+            'Likes': platform.likes,
+            'Views': platform.views,
+            'Subscribers': platform.subscribers,
+            'Comments': platform.comments,
+            'Videos': platform.videos,
+        })
+
+    # Convert data to DataFrame
+    df = pd.DataFrame(data)
+
+    # Export to Excel
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, sheet_name='Content Performance', index=False)
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=content_performance_report.xlsx'
+
+    return response
+
+
+
+def generate_content_performance_report_pdf(request):
+    
+    platforms = Platform.objects.filter().order_by('-likes')
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=content_performance_report.pdf'
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    p.setFont("Helvetica", 12)
+    p.drawString(30, height - 40, "Content Performance Report")
+    p.setFont("Helvetica", 10)
+
+    y = height - 60
+    p.drawString(30, y, "Platform Name")
+    p.drawString(150, y, "Likes")
+    p.drawString(220, y, "Views")
+    p.drawString(290, y, "Subscribers")
+    p.drawString(380, y, "Comments")
+    p.drawString(460, y, "Videos")
+
+    y -= 20
+    for platform in platforms:
+        p.drawString(30, y, platform.platform_name)
+        p.drawString(150, y, str(platform.likes))
+        p.drawString(220, y, str(platform.views))
+        p.drawString(290, y, str(platform.subscribers))
+        p.drawString(380, y, str(platform.comments))
+        p.drawString(460, y, str(platform.videos))
+        y -= 20
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    response.write(buffer.getvalue())
+    return response

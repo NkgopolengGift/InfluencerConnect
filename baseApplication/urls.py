@@ -38,4 +38,7 @@ urlpatterns = [
     path('generate_pdf_report/', views.generate_pdf_report, name='generate_pdf_report'),
     path('generate_word_report/', views.generate_word_report, name='generate_word_report'),
     path('generate_excel_report/', views.generate_excel_report, name='generate_excel_report'),
+
+    path('generate_content_performance_report_excel/', views.generate_content_performance_report_excel, name='generate_content_performance_report_excel'),
+    path('generate_content_performance_report_pdf/', views.generate_content_performance_report_pdf, name='generate_content_performance_report_pdf'),
 ]
