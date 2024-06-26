@@ -205,9 +205,6 @@ header{
     font-weight: 600;
     color: #4575b3;
 }
-/* home section end here */
-
-/* home center section start here */
 .youtube-channel-details {
     margin-bottom: 2em;
 }
@@ -234,17 +231,9 @@ canvas {
     background-color: #0f5dbb; 
 }
 
-/* home center section end here */
-
-/* home right start */
-
-.home-right{
-    width: 25%;
-    overflow: hidden;
-}
-.home-right-wrapper{
-    display: flex;
-    flex-direction: column;
+.home-center {
+    max-height: 80vh;
+    overflow-y: auto;
 }
 .event-friend,
 .create-page,

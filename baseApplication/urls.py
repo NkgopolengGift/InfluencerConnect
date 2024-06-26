@@ -35,4 +35,7 @@ urlpatterns = [
     path('fetch-messages/', views.fetch_messages, name='fetch_messages'),
     path('my-view/', views.my_view, name='my_view'),
 
+    path('generate_pdf_report/', views.generate_pdf_report, name='generate_pdf_report'),
+    path('generate_word_report/', views.generate_word_report, name='generate_word_report'),
+    path('generate_excel_report/', views.generate_excel_report, name='generate_excel_report'),
 ]

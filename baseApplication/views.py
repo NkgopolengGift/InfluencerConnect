@@ -2,13 +2,14 @@ import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
 import instaloader
 from django.core.mail import send_mail, BadHeaderError
-
+from .utils import fetch_youtube_channel_data, fetch_instagram_profile
 from .models import *
 from .forms import ChatMessagesCreateform
 from django.http import JsonResponse
@@ -23,6 +24,13 @@ from django.http import JsonResponse
 import string
 import random
 from datetime import datetime
+
+###########For Reports#######
+import io
+import pandas as pd
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from docx import Document
 
 #############-For YouTube API-##################
 from decouple import config
@@ -147,56 +155,32 @@ def influencerPlatform(request):
     if request.method == 'POST':
         youtube_url = request.POST.get('youtube_url')
         instagram_url = request.POST.get('instagram_url')
-        instagram_password = request.POST.get('instagram_password')
-        facebook_url = request.POST.get('instagram_url')
         content_category = request.POST.get('content_category')
         username = request.POST.get('username')
 
-     
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             messages.error(request, "User does not exist.")
             return redirect('signup')
-        
+          
         new_influencer = Influencer(
             user=user,
             content_category=content_category,
         )
         new_influencer.save()
 
-        # Fetch and save Instagram data if URL and password are provided
-        if instagram_url and instagram_password:
-            instagram_data = fetch_instagram_data(instagram_url, instagram_password)
-            if instagram_data:
-                new_platform = Platform(
-                    influencer=new_influencer,
-                    platform_name='Instagram',
-                    platform_url=instagram_url,
-                    likes=instagram_data['likes'],
-                    views=instagram_data['views'],
-                    subscribers=instagram_data['subscribers'],
-                    comments=instagram_data['comments'],
-                    videos=instagram_data['videos']
-                )
-                new_platform.save()
+        if youtube_url and youtube_url.strip():
+            try:
+                Platform.objects.create(influencer=new_influencer, platform_name="YouTube", platform_url=youtube_url.strip())
+            except IntegrityError:
+                return render(request, 'platform_error.html')
         
-        # Fetch and save YouTube data if URL is provided
-        if youtube_url:
-            channel_data = get_youtube_channel_data(youtube_url)
-            if channel_data:
-                new_platform = Platform(
-                    influencer=new_influencer,
-                    platform_name='YouTube',
-                    platform_url=youtube_url,
-                    likes=channel_data['likes'],
-                    views=channel_data['views'],
-                    subscribers=channel_data['subscribers'],
-                    comments=channel_data['comments'],
-                    videos=channel_data['videos']
-                )
-                new_platform.save()
-
+        if instagram_url and instagram_url.strip():
+            try:
+                Platform.objects.create(influencer=new_influencer, platform_name="Instagram", platform_url=instagram_url.strip())
+            except IntegrityError:
+                return render(request, 'platform_error.html')
         messages.success(request, "Your account is active. Login")
         return redirect('signin')
     else:
@@ -240,42 +224,115 @@ def sponser(request):
 def home(request):
   
     platforms = Platform.objects.select_related('influencer__user').all()
-    youtube_data = []
-    instagram_data = []
+    data = {}
 
     for platform in platforms:
-        if platform.platform_name == 'YouTube':
-            influencer_id = platform.influencer.user.user_id
-            channel_url = platform.platform_url
-            # Get YouTube channel data
-            channel_data = get_youtube_channel_data(channel_url)
-            logged_in_user_id = request.user.user_id
+        
+        influencer_id = platform.influencer.user.user_id
+        logged_in_user_id = request.user.user_id 
 
-            if channel_data:
-                youtube_data.append({
-                    'influencer_id': influencer_id,
-                    'influencer_username': platform.influencer.user.username,
-                    'channel_data': channel_data,
-                    'logged_in_user_id': logged_in_user_id
-                })
-        elif platform.platform_name == 'Instagram':
-            influencer_id = platform.influencer.user.user_id
-            instagram_data.append({
-                'influencer_id': influencer_id,
+        if influencer_id not in data:
+            data[influencer_id] = {
                 'influencer_username': platform.influencer.user.username,
-                'likes': platform.likes,
-                'views': platform.views,
-                'subscribers': platform.subscribers,
-                'comments': platform.comments,
-                'videos': platform.videos
-            })
-    
+                'youtube_data': {},
+                'instagram_data': {},
+                'influencer_id': influencer_id,
+                'logged_in_user_id': logged_in_user_id,
+            }
+
+        if platform.platform_name == 'YouTube':
+            channel_url = platform.platform_url
+            youtube_data = fetch_youtube_channel_data(channel_url)
+            data[influencer_id]['youtube_data'] = youtube_data
+        elif platform.platform_name == 'Instagram':
+            username = platform.platform_url.split('/')[-1]
+            instagram_data = fetch_instagram_profile(username)
+            data[influencer_id]['instagram_data'] = instagram_data
+
     context = {
+        
         'username': request.user.username,
-        'youtube_data': youtube_data,
-        'instagram_data': instagram_data
+        'platform_data': data.values(),
+        
     }
     return render(request, 'home.html', context)
+#############-Generate payment report-##################
+
+def process_payments():
+    paid_users = Payment.objects.filter(verified=True).values_list('user__username', flat=True)
+    all_users = User.objects.all().values_list('username', flat=True)
+    
+    paid_usernames = set(paid_users)
+    unpaid_usernames = set(all_users) - paid_usernames
+    
+    return list(paid_usernames), list(unpaid_usernames)
+
+
+def generate_pdf_report(request):
+    paid_usernames, unpaid_usernames = process_payments()
+    
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    p.drawString(100, 750, "User Payment Report")
+    p.drawString(100, 730, "Paid Users:")
+    
+    y = 710
+    for username in paid_usernames:
+        p.drawString(100, y, username)
+        y -= 20
+    
+    p.drawString(100, y - 20, "Unpaid Users:")
+    y -= 40
+    for username in unpaid_usernames:
+        p.drawString(100, y, username)
+        y -= 20
+    
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="user_payment_report.pdf"'
+    return response
+
+def generate_word_report(request):
+    paid_usernames, unpaid_usernames = process_payments()
+    
+    doc = Document()
+    doc.add_heading('User Payment Report', 0)
+
+    doc.add_heading('Paid Users:', level=1)
+    for username in paid_usernames:
+        doc.add_paragraph(username)
+
+    doc.add_heading('Unpaid Users:', level=1)
+    for username in unpaid_usernames:
+        doc.add_paragraph(username)
+
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = 'attachment; filename=user_payment_report.docx'
+    return response
+
+def generate_excel_report(request):
+    paid_usernames, unpaid_usernames = process_payments()
+    
+    df_paid = pd.DataFrame(paid_usernames, columns=['Paid Users'])
+    df_unpaid = pd.DataFrame(unpaid_usernames, columns=['Unpaid Users'])
+    
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df_paid.to_excel(writer, sheet_name='Paid Users', index=False)
+        df_unpaid.to_excel(writer, sheet_name='Unpaid Users', index=False)
+
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=user_payment_report.xlsx'
+    return response
 
 #############-Admin home-##################
 @login_required(login_url='index')
@@ -418,96 +475,6 @@ def delete_account(request):
         return redirect('home')
     else:
         return render(request, 'delete_account.html')
-
-#############-Feaching YouTube data-##################
-def get_youtube_channel_data(channel_url):
-
-    # Initialize the YouTube Data API client
-    api_key = settings.YOUTUBE_API_KEY
-    youtube = build('youtube', 'v3', developerKey=api_key)
-
-    channel_id = channel_url.split('/')[-1]
-    try:
-        # Call the channels.list method to retrieve channel statistics
-        details_response = youtube.channels().list(
-            part='statistics,snippet,contentDetails',
-            id=channel_id
-        ).execute()
-        
-        if 'items' in details_response:
-
-            channel = details_response['items'][0]
-            snippet = channel['snippet']
-            statistics = channel['statistics']
-            uploads_playlist_id = channel['contentDetails']['relatedPlaylists']['uploads']
-
-            channel_title = snippet.get('title', '')
-            creation_date = snippet.get('publishedAt', '')
-            views = statistics.get('viewCount', 0)
-            subscribers = statistics.get('subscriberCount', 0)
-            videos = statistics.get('videoCount', 0)
-
-            # Initialize totals
-            total_likes = 0
-            total_comments = 0
-
-            # Retrieve all videos in the uploads playlist
-            next_page_token = None
-            while True:
-                playlist_response = youtube.playlistItems().list(
-                    part='contentDetails',
-                    playlistId=uploads_playlist_id,
-                    maxResults=50,
-                    pageToken=next_page_token
-                ).execute()
-                
-                video_ids = [item['contentDetails']['videoId'] for item in playlist_response['items']]
-
-                # Get statistics for each video
-                video_response = youtube.videos().list(
-                    part='statistics',
-                    id=','.join(video_ids)
-                ).execute()
-
-                for video in video_response['items']:
-                    video_stats = video['statistics']
-                    total_likes += int(video_stats.get('likeCount', 0))
-                    total_comments += int(video_stats.get('commentCount', 0))
-
-                next_page_token = playlist_response.get('nextPageToken')
-                if not next_page_token:
-                    break
-
-            channel_data = {
-                'likes': total_likes,
-                'views': views,
-                'subscribers': subscribers,
-                'comments': total_comments,
-                'videos': videos,
-                'channel_title': channel_title,
-                'creation_date': creation_date
-            }
-
-            # Update Platform model with fetched data
-            platform = Platform.objects.get(platform_url=channel_url)
-            platform.likes = total_likes
-            platform.views = views
-            platform.subscribers = subscribers
-            platform.comments = total_comments
-            platform.videos = videos
-            platform.save()
-            return channel_data
-       
-        else:
-            print('No items found in YouTube API response:', details_response)
-            return None
-    except HttpError as e:
-        print('An HTTP error occurred:', e)
-        return None
-    except HttpError as e:
-        print('An error occurred:', e)
-        return None
-    
 
 #############-Initializing payment-##################
 def initiate_payment(request):
@@ -697,32 +664,3 @@ def fetch_messages(request):
         })
 
     return JsonResponse(message_data, safe=False)
-
-#Fetch instagram data 
-def fetch_instagram_data(instagram_url, instagram_password):
-    L = instaloader.Instaloader()
-    try:
-        username = instagram_url
-        L.login(username, instagram_password)
-        profile = instaloader.Profile.from_username(L.context, username)
-        
-        total_likes = sum(post.likes for post in profile.get_posts())
-        total_comments = sum(post.comments for post in profile.get_posts())
-        videos = profile.mediacount  # Number of posts/videos
-        
-        instagram_data = {
-            'likes': total_likes,
-            'views': profile.mediacount,  
-            'subscribers': profile.followers,
-            'comments': total_comments,
-            'videos': videos
-        }
-        print(total_likes)
-        print(profile.mediacount)
-        print(profile.followers)
-        print(total_comments)
-        
-        return instagram_data
-    except Exception as e:
-        print(f"Error fetching Instagram data: {e}")
-        return None

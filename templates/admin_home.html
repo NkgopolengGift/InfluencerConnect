@@ -59,10 +59,10 @@
                             <a href="{% url "delete_account" %}">Delete your account</a>
                         </div>
                         <div>
-                            <a  onclick="toggleReport('payment-transaction')">Generate Payment Report</a>
+                            <a onclick="toggleReport('payment-transaction')">Generate Payment Report</a>
                         </div>
                         <div>
-                            <a  onclick="toggleReport('user-activity')">User Activity Reports</a>
+                            <a onclick="toggleReport('user-activity')">User Activity Reports</a>
                         </div>
                     </div>
                 </div><!-- home left end here -->
@@ -72,27 +72,12 @@
                     <!-- Payment Transaction Table -->
                     <div id="payment-transaction-table" class="report-table" style="display: none;">
                         <h3>Payment Transaction Report</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for payment in payments %}
-                                <tr>
-                                    <td>{{ payment.user.username }}</td>
-                                    <td>{{ payment.transaction_date }}</td>
-                                    <td>R{{ payment.amount }}</td>
-                                    <td>{{ payment.status }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <button onclick="generatePDF('payment-transaction')">Generate PDF</button>
+ 
+                        <div id="report-buttons" style="display: none;">
+                            <button><a href="{% url "generate_pdf_report" %}">Generate PDF Report</a></button>
+                            <button><a href="{% url "generate_word_report" %}">Generate Word Report</a></button>
+                            <!--<button><a href="{% url "generate_excel_report" %}">Generate Excel Report</a></button>-->
+                        </div>
                     </div>
                     
                     <!-- User Activity Table -->
@@ -120,7 +105,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <button onclick="generatePDF('user-activity')">Generate PDF</button>
+                        <div id="report-buttons-user-activity" style="display: none;">
+                            <button onclick="generatePDF('user-activity')">Generate PDF</button>
+                            <button onclick="generateWord('user-activity')">Generate Word</button>
+                            <button onclick="generateExcel('user-activity')">Generate Excel</button>
+                        </div>
                     </div>
                 </div><!-- home center end -->
 
@@ -138,20 +127,35 @@
         function toggleReport(reportType) {
             var paymentTable = document.getElementById('payment-transaction-table');
             var userActivityTable = document.getElementById('user-activity-table');
+            var paymentButtons = document.getElementById('report-buttons');
+            var userActivityButtons = document.getElementById('report-buttons-user-activity');
 
             if (reportType === 'payment-transaction') {
                 paymentTable.style.display = 'block';
                 userActivityTable.style.display = 'none';
+                paymentButtons.style.display = 'block';
+                userActivityButtons.style.display = 'none';
             } else if (reportType === 'user-activity') {
                 paymentTable.style.display = 'none';
                 userActivityTable.style.display = 'block';
+                paymentButtons.style.display = 'none';
+                userActivityButtons.style.display = 'block';
             }
         }
 
         function generatePDF(reportType) {
-            // Placeholder alert, replace with actual PDF generation logic
             alert('Generating PDF for ' + reportType);
-            // Example: Implement PDF generation using jsPDF or a backend service
+            // Implement PDF generation logic here
+        }
+
+        function generateWord(reportType) {
+            alert('Generating Word document for ' + reportType);
+            // Implement Word generation logic here
+        }
+
+        function generateExcel(reportType) {
+            alert('Generating Excel file for ' + reportType);
+            // Implement Excel generation logic here
         }
     </script>
 </body>

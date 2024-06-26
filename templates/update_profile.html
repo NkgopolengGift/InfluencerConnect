@@ -73,7 +73,6 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <button type="button" id="add-platform">Add another platform</button>
                 {% endif %}
 
                 {% if user.account_type == 'SPONSOR' %}
@@ -90,32 +89,6 @@
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('add-platform').addEventListener('click', function () {
-            const platformsContainer = document.getElementById('platforms-container');
-            const platformCount = platformsContainer.childElementCount;
-            const platformItem = document.createElement('div');
-            platformItem.className = 'platform-item';
-            platformItem.innerHTML = `
-                <label>Platform Name</label>
-                <input type="text" name="new_platform_name_${platformCount}" placeholder="Platform Name" required>
-                <label>Platform URL</label>
-                <input type="text" name="new_platform_url_${platformCount}" placeholder="Platform URL" required>
-                <button type="button" class="remove-platform">Remove</button>
-            `;
-            platformsContainer.appendChild(platformItem);
-    
-            platformItem.querySelector('.remove-platform').addEventListener('click', function () {
-                platformItem.remove();
-            });
-        });
-    
-        document.querySelectorAll('.remove-platform').forEach(button => {
-            button.addEventListener('click', function () {
-                button.parentElement.remove();
-            });
-        });
-    </script>
     
 </body>
 </html>

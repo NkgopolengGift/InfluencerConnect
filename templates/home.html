@@ -16,6 +16,42 @@
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
      <!-- =========== Chat engine ============== -->
      <script src="https://cdn.chatengine.io/chat-engine-io.js"></script>
+     <style>
+        .home-center {
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+        .home-center {
+            width: 78%;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: var(--white);
+            box-shadow: 0 2px 5px 0 var(--shadow);
+            border-radius: 20px;
+            margin-left: 10px;
+            align-items: center;
+        }
+        .influencer-details {
+            width: 100%;
+        }
+
+        .influencer-details h2 {
+            text-align: center; 
+            margin-bottom: 20px;
+            margin-top: 20px; 
+        }
+        /*.communication-button {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+           
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+                
+        }*/
+    </style>
 </head>
 <body>
 
@@ -90,77 +126,54 @@
                         <!-- home center start here -->
                         <div class="home-center">
                             <div class="home-center-wrapper">
-                                {% for data in youtube_data %}
-                                    <div class="youtube-channel-details">
-                                        <h2>YouTube Channel Data for Influencer: {{ data.influencer_username  }}</h2>
-                                    
-                                        <p>Channel Title: {{ data.channel_data.channel_title }}</p>
-                                        <p>Subscribers: {{ data.channel_data.subscribers }}</p>
-                                        <p>Likes: {{ data.channel_data.likes}}</p>
-                                        <p>Views: {{ data.channel_data.views }}</p>
-                                        <p>Videos: {{ data.channel_data.videos }}</p>
-                                        <canvas id="youtubeChart{{ forloop.counter }}"></canvas>
-                                        <br>
-                                        {% if request.user.account_type == "SPONSOR" %}
-                                        <div id="container">
-                                            <div id="myDiv">
-                                                <form method="post" action="{% url 'create_room' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="influencer_id" value="{{ data.influencer_id  }}">
-                                                    <input type="hidden" name="sponsor_id" value="{{ data.logged_in_user_id  }}">
-                                                    <button id="showButton" type="submit">Send commication request</button>
-                                                </form>
-                                            </div> 
-                                                                       
-                                        
-                                        </div>
-                                        <style>
-                                            #showButton {
-                                                background-color: blue;
-                                                color: white;
-                                                padding: 10px 20px;
-                                                border: none;
-                                                cursor: pointer;
-                                                position: absolute;
-                                                left: 50%;
-                                                transform: translateX(-50%);
-                                                bottom: 20px;
-                                            }
-                                            
-                                        </style>
-                                        {% endif %}                                
-                                        <script>
-                                            const ctx{{ forloop.counter }} = document.getElementById('youtubeChart{{ forloop.counter }}').getContext('2d');
-                                            const myChart{{ forloop.counter }} = new Chart(ctx{{ forloop.counter }}, {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: ['Likes: ', 'Views: ', 'Subscribers', 'Comments', 'Videos'],
-                                                    datasets: [{
-                                                        label: 'Channel Data',
+                                {% for influencer_data in platform_data %}
+                                <div class="influencer-details">
+                                    <h2>Data for Influencer: {{influencer_data.influencer_username}}</h2>
+
+                                    <canvas id="platformChart{{ forloop.counter }}" style="width: 100%; height: 400px;"></canvas>
+                                    <form method="post" action="{% url 'create_room' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="influencer_id" value="{{ influencer_data.influencer_id }}">
+                                        <input type="hidden" name="sponsor_id" value="{{ influencer_data.logged_in_user_id }}">
+                                        <button class="communication-button" type="submit">Send communication request</button>
+                                    </form>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const ctx{{ forloop.counter }} = document.getElementById('platformChart{{ forloop.counter }}').getContext('2d');
+                                            const data = {
+                                                labels: ['Subscribers', 'Views', 'Likes', 'Videos', 'Followers', 'Following', 'Total Likes'],
+                                                datasets: [
+                                                    {
+                                                        label: 'YouTube',
                                                         data: [
-                                                            {{ data.channel_data.likes }},
-                                                            {{ data.channel_data.views }},
-                                                            {{ data.channel_data.subscribers }},
-                                                            {{ data.channel_data.comments }},
-                                                            {{ data.channel_data.videos }}
+                                                            {{ influencer_data.youtube_data.subscribers|default:0 }},
+                                                            {{ influencer_data.youtube_data.views|default:0 }},
+                                                            {{ influencer_data.youtube_data.likes|default:0 }},
+                                                            {{ influencer_data.youtube_data.videos|default:0 }},
+                                                            0, 0, 0
                                                         ],
-                                                        backgroundColor: [
-                                                            'rgba(255, 99, 132, 0.2)',
-                                                            'rgba(54, 162, 235, 0.2)',
-                                                            'rgba(255, 206, 86, 0.2)',
-                                                            'rgba(75, 192, 192, 0.2)',
-                                                            'rgba(153, 102, 255, 0.2)'
-                                                        ],
-                                                        borderColor: [
-                                                            'rgba(255, 99, 132, 1)',
-                                                            'rgba(54, 162, 235, 1)',
-                                                            'rgba(255, 206, 86, 1)',
-                                                            'rgba(75, 192, 192, 1)',
-                                                            'rgba(153, 102, 255, 1)'
-                                                        ],
+                                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                        borderColor: 'rgba(54, 162, 235, 1)',
                                                         borderWidth: 1
-                                                    }]
-                                                },
+                                                    },
+                                                    {
+                                                        label: 'Instagram',
+                                                        data: [
+                                                            0, 0, 0, 0,
+                                                            {{ influencer_data.instagram_data.followers|default:0 }},
+                                                            {{ influencer_data.instagram_data.following|default:0 }},
+                                                            {{ influencer_data.instagram_data.total_likes|default:0 }}
+                                                        ],
+                                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                                        borderWidth: 1
+                                                    }
+                                                ]
+                                            };
+            
+                                            const config = {
+                                                type: 'bar',
+                                                data: data,
                                                 options: {
                                                     responsive: true,
                                                     plugins: {
@@ -169,22 +182,29 @@
                                                         },
                                                         title: {
                                                             display: true,
-                                                            text: 'YouTube Channel Data'
+                                                            text: 'YouTube and Instagram Data'
+                                                        }
+                                                    },
+                                                    scales: {
+                                                        x: {
+                                                            beginAtZero: true
+                                                        },
+                                                        y: {
+                                                            beginAtZero: true
                                                         }
                                                     }
                                                 }
-                                            });
-                                        </script>
-                                    </div>
+                                            };
+            
+                                            new Chart(ctx{{ forloop.counter }}, config);
+                                        });
+                                    </script>
+                                </div>
                                 {% endfor %}
                             </div>
                         </div>
                         <!-- home center end -->
             <!-- home center end -->
-            <!-- Home Right -->
-            <div class="home-right">               
-            </div>            
-            <!-- Home Right Wrapper End -->
     </div><!-- Home Right End -->
     <script src="{% static 'scripts/main.js' %}" ></script>
 </body>

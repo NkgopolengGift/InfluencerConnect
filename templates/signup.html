@@ -31,20 +31,20 @@
         {% endif %}
         <!--Flash messages end-->
         <h1 class="form-title">Sign up</h1>
-        <form method="post" action="/signup/" >
+        <form method="post" action="/signup/" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="main-user-info">
                 <div class="user-input-box">
-                    <label for="username">First Name</label>
-                    <input type="text" id="fullName" name="first_name" placeholder="Enter your first name" required>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="first_name" placeholder="Enter your first name" required>
                 </div>
                 <div class="user-input-box">
-                    <label for="username">Last Name</label>
-                    <input type="text" id="fullName" name="last_name" placeholder="Enter your last name">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="last_name" placeholder="Enter your last name">
                 </div>
                 <div class="user-input-box">
                     <label for="username">Username</label>
-                    <input type="text" id="fullName" name="username" placeholder="choose username" required>
+                    <input type="text" id="username" name="username" placeholder="choose username" required>
                 </div>
                 <div class="user-input-box">
                     <label for="email">Email</label>
@@ -97,7 +97,53 @@
     crossorigin="anonymous">
     </script>
     <!--Bootstrap JS end-->
+
+    <!--Validation Script start-->
+    <script>
+        function validateForm() {
+            // Regular expressions for validation
+            const nameRegex = /^[a-zA-Z]+$/;
+            const phoneRegex = /^\d{10}$/;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
+
+            // Getting form values
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const username = document.getElementById("username").value;
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            // Validation checks
+            if (!nameRegex.test(firstName)) {
+                alert("First name must contain only letters.");
+                return false;
+            }
+            if (!nameRegex.test(lastName)) {
+                alert("Last name must contain only letters.");
+                return false;
+            }
+            if (!nameRegex.test(username)) {
+                alert("Username must contain only letters.");
+                return false;
+            }
+            if (phoneNumber && !phoneRegex.test(phoneNumber)) {
+                alert("Phone number must be 10 digits.");
+                return false;
+            }
+            if (!passwordRegex.test(password)) {
+                alert("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            // If all checks pass
+            return true;
+        }
+    </script>
+    <!--Validation Script end-->
 </body>
 </html>
-
-

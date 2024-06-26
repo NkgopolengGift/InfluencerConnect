@@ -31,20 +31,20 @@
         {% endif %}
         <!--Flash messages end-->
         <h1 class="form-title">Sign Up As Admin</h1>
-        <form method="post" action="/admin_profile/" >
+        <form method="post" action="/admin_profile/" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="main-user-info">
                 <div class="user-input-box">
-                    <label for="username">First Name</label>
-                    <input type="text" id="fullName" name="first_name" placeholder="Enter your first name" required>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="first_name" placeholder="Enter your first name" required>
                 </div>
                 <div class="user-input-box">
-                    <label for="username">Last Name</label>
-                    <input type="text" id="fullName" name="last_name" placeholder="Enter your last name">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="last_name" placeholder="Enter your last name">
                 </div>
                 <div class="user-input-box">
                     <label for="username">Username</label>
-                    <input type="text" id="fullName" name="username" placeholder="choose username" required>
+                    <input type="text" id="username" name="username" placeholder="Choose username" required>
                 </div>
                 <div class="user-input-box">
                     <label for="email">Email</label>
@@ -87,7 +87,47 @@
     crossorigin="anonymous">
     </script>
     <!--Bootstrap JS end-->
+
+    <!-- JavaScript Validation Script -->
+    <script>
+        function validateForm() {
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var username = document.getElementById('username').value;
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            var nameRegex = /^[a-zA-Z]+$/;
+            var phoneRegex = /^[0-9]+$/;
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+            if (!nameRegex.test(firstName)) {
+                alert("First Name should contain only letters.");
+                return false;
+            }
+            if (!nameRegex.test(lastName)) {
+                alert("Last Name should contain only letters.");
+                return false;
+            }
+            if (!nameRegex.test(username)) {
+                alert("Username should contain only letters.");
+                return false;
+            }
+            if (!phoneRegex.test(phoneNumber)) {
+                alert("Phone Number should contain only numbers.");
+                return false;
+            }
+            if (!passwordRegex.test(password)) {
+                alert("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
-
-

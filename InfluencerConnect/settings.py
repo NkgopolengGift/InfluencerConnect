@@ -86,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
+WSGI_APPLICATION = 'InfluencerConnect.wsgi.application'
 
 
 # Database
@@ -106,10 +106,10 @@ ASGI_APPLICATION = 'InfluencerConnect.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'influencerconnectdb_k4v5',
-        'USER': 'influencerconnectdb_k4v5_user',
-        'PASSWORD': 'vhDTlv5sAO4k0oATgDhIY6bf1sY3qo4Z',
-        'HOST': 'dpg-cpt2t0bv2p9s73b0jptg-a.oregon-postgres.render.com',
+        'NAME': 'influencerconnectdb_es0o',
+        'USER': 'influencerconnectdb_es0o_user',
+        'PASSWORD': 'TiHImOMsz8T0ff78PanpVVoAi6ac6WTL',
+        'HOST': 'dpg-cptnh3o8fa8c738nf190-a.oregon-postgres.render.com',
         'PORT': '5432',
     }
 }
