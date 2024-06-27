@@ -1,14 +1,14 @@
 **InfluencerConnect**
 
-**Project Overview**
+**Project Overview:**
 
 **InfluencerConnect** is a school project developed for the module SWP316D at **Tshwane University of Technology**. The primary aim of this project is to connect influencers with potential collaborators and brands.
 
-**Legal Notice**
+**Legal Notice:**
 
 This project is the intellectual property of Tshwane University of Technology. Any attempt to monetize this project without explicit permission from the university will result in legal action.
 
-**Prerequisites**
+**Prerequisites:**
 
 To clone and run this project, you will need:
 
