@@ -1,19 +1,48 @@
-**InfluencerConnect**
+# InfluencerConnect  
 
-**Project Overview:**
+## Project Overview  
 
-**InfluencerConnect** is a school project developed for the module SWP316D at **Tshwane University of Technology**. The primary aim of this project is to connect influencers with potential collaborators and brands.
+**InfluencerConnect** is a platform that connects influencers with sponsors by consolidating statistics from platforms like YouTube, Facebook, and TikTok into a unified profile. This project was developed for the module **SWP316D (Software Project)** at **Tshwane University of Technology**.  
 
-**Legal Notice:**
+### Key Features  
+- Aggregates influencer data from multiple social media platforms.  
+- Provides brands with a streamlined way to discover and collaborate with influencers.  
+- Secure payment integration for sponsorships.  
 
-This project is the intellectual property of Tshwane University of Technology. Any attempt to monetize this project without explicit permission from the university will result in legal action.
+## Legal Notice  
 
-**Prerequisites:**
+This project is the intellectual property of **Tshwane University of Technology**. Any unauthorized monetization or distribution of this project without explicit permission from the university will result in legal action.  
 
-To clone and run this project, you will need:
+## Technologies Used  
 
-1. YouTube Data API Key: Required for fetching and analyzing YouTube data.
-2. PayStack API Key and Account: Required for handling payments.
-3. Project SECRET_KEY: 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
-4. Install the required packages under requirements.txt
+- **Backend:** Django  
+- **Frontend:** JavaScript, HTML, CSS  
+- **Database:** PostgreSQL  
+- **APIs:** YouTube Data API, TikTok API, PayStack API  
 
+## Role & Contributions  
+
+- Developed the **backend** for social media API data collection and processing.  
+- Implemented the **UI** for a seamless user experience.  
+- Integrated **PostgreSQL** for managing influencer statistics and profiles.  
+
+## Prerequisites  
+
+To clone and run this project locally, you will need:  
+
+- **YouTube Data API Key** – Required for fetching YouTube analytics.  
+- **TikTok API Access** – Needed for TikTok data retrieval.  
+- **PayStack API Key & Account** – Handles payment processing for sponsorships.   
+
+
+## Usage  
+
+- **Influencers** can create profiles and sync their social media stats.  
+- **Brands/Sponsors** can browse influencers and initiate collaborations.  
+- **Admin** can manage user roles and monitor platform activity.  
+
+## License  
+
+This project is for **educational purposes only** and is owned by **Tshwane University of Technology**. Unauthorized commercial use is prohibited.  
+
+---
