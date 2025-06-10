@@ -34,7 +34,6 @@ To clone and run this project locally, you will need:
 - **PayStack API Key & Account** – For payment processing.  
 - **Render PostgreSQL credentials** (if using Render)  
 
-
 ### Installation & Running the Project
 
 1. Install dependencies:
@@ -43,15 +42,25 @@ To clone and run this project locally, you will need:
    ```
 
 2. Activate the virtual environment:
-   ```
-   source venv/bin/activate
-   ```
+
+   - **On Linux/macOS:**
+     ```
+     source venv/bin/activate
+     ```
+   - **On Windows (Command Prompt):**
+     ```
+     venv\Scripts\activate.bat
+     ```
+   - **On Windows (PowerShell):**
+     ```
+     venv\Scripts\Activate.ps1
+     ```
 
 3. Run the development server:
    ```
    python manage.py runserver
    ```
-   
+
 ### Environment Variables  
 
 Create a `.env` file in your project root with the following (update with your actual credentials):  
@@ -72,4 +81,4 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password  
 DB_HOST=your_db_host  
 DB_PORT=5432  
-```  
+```
