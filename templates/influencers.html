@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencers | InfluencerConnect</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">Influencer<span>Connect</span></a>
+                <div class="nav-links">
+                    <a href="">Home</a>
+                    <a href="#" class="active">Influencers</a>
+                    <a href="#">Brands</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">About</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline">Login</a>
+                    <a href="#" class="btn btn-primary">Sign Up</a>
+                </div>
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="influencers-header">
+        <div class="container">
+            <h1>Find Your Perfect Influencer Match</h1>
+            <p>Filter through our database of verified influencers across all platforms</p>
+        </div>
+    </section>
+
+    <section class="filters">
+        <div class="container">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="platform">Platform</label>
+                    <select id="platform">
+                        <option value="all">All Platforms</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitter">Twitter</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="all">All Categories</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="beauty">Beauty</option>
+                        <option value="lifestyle">Lifestyle</option>
+                        <option value="fitness">Fitness</option>
+                        <option value="food">Food</option>
+                        <option value="travel">Travel</option>
+                        <option value="tech">Tech</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="followers">Followers</label>
+                    <select id="followers">
+                        <option value="all">Any</option>
+                        <option value="nano">Nano (1K-10K)</option>
+                        <option value="micro">Micro (10K-50K)</option>
+                        <option value="mid">Mid (50K-500K)</option>
+                        <option value="macro">Macro (500K-1M)</option>
+                        <option value="mega">Mega (1M+)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="location">Location</label>
+                    <select id="location">
+                        <option value="all">Anywhere</option>
+                        <option value="us">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="ca">Canada</option>
+                        <option value="au">Australia</option>
+                        <option value="in">India</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary"><i class="fas fa-filter"></i> Apply Filters</button>
+                <button class="btn btn-outline"><i class="fas fa-sync-alt"></i> Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="influencer-list">
+        <div class="container">
+            <div class="sort-options">
+                <span>Sort by:</span>
+                <select id="sort">
+                    <option value="relevance">Relevance</option>
+                    <option value="followers">Followers (High to Low)</option>
+                    <option value="engagement">Engagement Rate</option>
+                    <option value="rating">Rating</option>
+                    <option value="price">Price (Low to High)</option>
+                </select>
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                    <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+            
+            <div class="influencer-grid">
+                <!-- Influencer cards will be loaded here via JavaScript -->
+                <div class="influencer-card">
+                    <div class="card-image">
+                        <img src="assets/influencer1.jpg" alt="Alex Morgan">
+                        <span class="badge">Verified</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Alex Morgan</h3>
+                        <p class="category">Fashion & Lifestyle</p>
+                        <div class="stats">
+                            <span><i class="fas fa-users"></i> 245K</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                            <span><i class="fas fa-heart"></i> 8.2%</span>
+                        </div>
+                        <div class="platform-tags">
+                            <span class="instagram"><i class="fab fa-instagram"></i></span>
+                            <span class="tiktok"><i class="fab fa-tiktok"></i></span>
+                        </div>
+                        <button class="btn btn-primary btn-block">View Profile</button>
+                    </div>
+                </div>
+                
+                <!-- More influencer cards would be here -->
+            </div>
+            
+            <div class="pagination">
+                <button class="btn btn-outline"><i class="fas fa-chevron-left"></i> Previous</button>
+                <div class="page-numbers">
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <span>...</span>
+                    <button>8</button>
+                </div>
+                <button class="btn btn-outline">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <!-- Same footer as index.html -->
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

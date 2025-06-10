@@ -4,6 +4,7 @@ from django.urls import path
 urlpatterns = [
 
     path('', views.index, name='index'),
+    path('influecers/', views.influencers_list, name='influencers'),
 
     path('signup/', views.signUp, name='signup'),
     path('signin/', views.signIn, name='signin'),
@@ -23,11 +24,6 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('delete_account/', views.delete_account, name="delete_account"),
-
-    path('initiate_payment/', views.initiate_payment, name="initiate_payment"),
-    path('verify_payment/', views.verify_payment, name='verify_payment'),
-
-    path('payment_report/', views.payment_report, name='payment_report'),
 
     path('chat/', views.chat, name='chat'),
     path('create_room/', views.create_room, name='create_room'),

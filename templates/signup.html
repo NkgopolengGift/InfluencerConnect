@@ -4,109 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Bootstrap CSS start-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-    crossorigin="anonymous">
-    <!--Bootstrap CSS end-->
-    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
-    <title>Signup</title>
+    <title>Sign Up | InfluencerConnect</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!--Signup form start-->
-    <div class="container">
-        <!--Flash messages start-->
-        {% if messages %}
+    <header class="header">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
+            <nav class="navbar">
+                <a href="{% url 'index' %}" class="logo">Influencer<span>Connect</span></a>
+                <div class="auth-buttons">
+                    <span>Already have an account?</span>
+                    <a href="{% url 'signin' %}" class="btn btn-outline">Login</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="auth-container">
+        <div class="container">
+            <div class="auth-card">
+                <!-- Flash messages -->
+                {% if messages %}
+                <div class="alert-container">
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }}">
                             {{ message }}
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-            </div>
-        {% endif %}
-        <!--Flash messages end-->
-        <h1 class="form-title">Sign up</h1>
-        <form method="post" action="/signup/" onsubmit="return validateForm()">
-            {% csrf_token %}
-            <div class="main-user-info">
-                <div class="user-input-box">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="first_name" placeholder="Enter your first name" required>
-                </div>
-                <div class="user-input-box">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="last_name" placeholder="Enter your last name">
-                </div>
-                <div class="user-input-box">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="choose username" required>
-                </div>
-                <div class="user-input-box">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter Email" required>
-                </div>
-                <div class="user-input-box">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number">
-                </div>
-                <div class="user-input-box">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter Password" required>
-                </div>
-                <div class="user-input-box">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-                </div>
-            </div>
-            <div class="gender-details-box">
-                <span class="gender-title">Account Type</span>
-                <div class="gender-category">
-                    <input type="radio" name="type" id="influencer" value="INFLUENCER" required>
-                    <label for="influencer">Influencer</label>
+                {% endif %}
 
-                    <input type="radio" name="type" id="sponsor" value="SPONSOR" required>
-                    <label for="sponsor">Sponsor</label>
+                <h2 class="auth-title">Join InfluencerConnect</h2>
+                <p class="auth-subtitle">Create your account to get started</p>
+
+                <form method="post" action="/signup/" class="auth-form" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="first_name" placeholder="Enter your first name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="last_name" placeholder="Enter your last name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Choose username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" placeholder="Enter password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group account-type">
+                        <label>Account Type</label>
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type" id="influencer" value="INFLUENCER" required>
+                                <label class="form-check-label" for="influencer">
+                                    <i class="fas fa-user-plus"></i> Influencer
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type" id="sponsor" value="SPONSOR" required>
+                                <label class="form-check-label" for="sponsor">
+                                    <i class="fas fa-briefcase"></i> Sponsor
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="{% url 'signin' %}">Login here</a></p>
                 </div>
             </div>
-            <div class="form-submit-btn">
-                <input type="submit" value="Register">
-            </div>
-            <div class="signup-link">Already have an account? <a href="{% url "signin" %}">Login here</a></div>
-        </form>
-    </div>
-    <!--Signup form end-->
+        </div>
+    </main>
 
-    <!--Bootstrap JS start-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-    crossorigin="anonymous">        
-    </script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 
-    crossorigin="anonymous">
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" 
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 
-    crossorigin="anonymous">
-    </script>
-    <!--Bootstrap JS end-->
-
-    <!--Validation Script start-->
+    <!-- Validation Script -->
     <script>
         function validateForm() {
-            // Regular expressions for validation
             const nameRegex = /^[a-zA-Z]+$/;
             const phoneRegex = /^\d{10}$/;
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
 
-            // Getting form values
             const firstName = document.getElementById("firstName").value;
             const lastName = document.getElementById("lastName").value;
             const username = document.getElementById("username").value;
@@ -114,12 +136,11 @@
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirmPassword").value;
 
-            // Validation checks
             if (!nameRegex.test(firstName)) {
                 alert("First name must contain only letters.");
                 return false;
             }
-            if (!nameRegex.test(lastName)) {
+            if (lastName && !nameRegex.test(lastName)) {
                 alert("Last name must contain only letters.");
                 return false;
             }
@@ -140,10 +161,8 @@
                 return false;
             }
 
-            // If all checks pass
             return true;
         }
     </script>
-    <!--Validation Script end-->
 </body>
 </html>
