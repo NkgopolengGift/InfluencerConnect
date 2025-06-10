@@ -106,11 +106,11 @@ WSGI_APPLICATION = 'InfluencerConnect.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'influencerconnectdb_es0o',
-        'USER': 'influencerconnectdb_es0o_user',
-        'PASSWORD': 'TiHImOMsz8T0ff78PanpVVoAi6ac6WTL',
-        'HOST': 'dpg-cptnh3o8fa8c738nf190-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 #Database inside
